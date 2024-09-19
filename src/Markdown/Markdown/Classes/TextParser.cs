@@ -1,0 +1,14 @@
+﻿using Markdown.Enums;
+using Markdown.Interfaces;
+
+namespace Markdown.Classes;
+
+// Парсит строку и придает желательно ей какой-то рабочий вид
+public class TextParser: IParser
+{
+    // В контексте данного класса строка textToBeMarkdown - строка, которую нужно превратить в html
+    public bool Parse(string textToBeMarkdown, List<TokenType> tokens)
+    {
+        throw new NotImplementedException();
+    }
+}
