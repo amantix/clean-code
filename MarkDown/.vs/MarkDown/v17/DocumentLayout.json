@@ -1,0 +1,142 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5C8E0CB3-3640-483A-B727-3BA44938238D}|MarkDown\\MarkDown.csproj|c:\\users\\user\\desktop\\murkdown\\clean-code\\markdown\\markdown\\classes\\md.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5C8E0CB3-3640-483A-B727-3BA44938238D}|MarkDown\\MarkDown.csproj|solutionrelative:markdown\\classes\\md.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E87B816E-A2DB-4417-A38C-2DE9FB7D3EA4}|TestMD\\TestMD.csproj|c:\\users\\user\\desktop\\murkdown\\clean-code\\markdown\\testmd\\unittest1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E87B816E-A2DB-4417-A38C-2DE9FB7D3EA4}|TestMD\\TestMD.csproj|solutionrelative:testmd\\unittest1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5C8E0CB3-3640-483A-B727-3BA44938238D}|MarkDown\\MarkDown.csproj|c:\\users\\user\\desktop\\murkdown\\clean-code\\markdown\\markdown\\classes\\token.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5C8E0CB3-3640-483A-B727-3BA44938238D}|MarkDown\\MarkDown.csproj|solutionrelative:markdown\\classes\\token.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5C8E0CB3-3640-483A-B727-3BA44938238D}|MarkDown\\MarkDown.csproj|c:\\users\\user\\desktop\\murkdown\\clean-code\\markdown\\markdown\\interfaces\\imarkdown.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5C8E0CB3-3640-483A-B727-3BA44938238D}|MarkDown\\MarkDown.csproj|solutionrelative:markdown\\interfaces\\imarkdown.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E87B816E-A2DB-4417-A38C-2DE9FB7D3EA4}|TestMD\\TestMD.csproj|c:\\users\\user\\desktop\\murkdown\\clean-code\\markdown\\testmd\\testmd.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{E87B816E-A2DB-4417-A38C-2DE9FB7D3EA4}|TestMD\\TestMD.csproj|solutionrelative:testmd\\testmd.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5C8E0CB3-3640-483A-B727-3BA44938238D}|MarkDown\\MarkDown.csproj|c:\\users\\user\\desktop\\murkdown\\clean-code\\markdown\\markdown\\markdown.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{5C8E0CB3-3640-483A-B727-3BA44938238D}|MarkDown\\MarkDown.csproj|solutionrelative:markdown\\markdown.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\MarkDown\\Class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MarkDown\\Class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TestMD",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\TestMD\\TestMD.csproj",
+              "RelativeDocumentMoniker": "TestMD\\TestMD.csproj",
+              "ToolTip": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\TestMD\\TestMD.csproj",
+              "RelativeToolTip": "TestMD\\TestMD.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-09-20T11:13:13.619Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UnitTest1.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\TestMD\\UnitTest1.cs",
+              "RelativeDocumentMoniker": "TestMD\\UnitTest1.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\TestMD\\UnitTest1.cs",
+              "RelativeToolTip": "TestMD\\UnitTest1.cs",
+              "ViewState": "AQIAACAAAAAAAAAAAAAgwC0AAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-20T10:44:12.364Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Token.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\MarkDown\\Classes\\Token.cs",
+              "RelativeDocumentMoniker": "MarkDown\\Classes\\Token.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\MarkDown\\Classes\\Token.cs",
+              "RelativeToolTip": "MarkDown\\Classes\\Token.cs",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAAA4AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-20T10:32:29.594Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MD.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\MarkDown\\Classes\\MD.cs",
+              "RelativeDocumentMoniker": "MarkDown\\Classes\\MD.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\MarkDown\\Classes\\MD.cs",
+              "RelativeToolTip": "MarkDown\\Classes\\MD.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAsAAABAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-20T10:32:29.545Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IMarkDown.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\MarkDown\\Interfaces\\IMarkDown.cs",
+              "RelativeDocumentMoniker": "MarkDown\\Interfaces\\IMarkDown.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\MarkDown\\Interfaces\\IMarkDown.cs",
+              "RelativeToolTip": "MarkDown\\Interfaces\\IMarkDown.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAMAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-20T10:32:28.491Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MarkDown.csproj",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\MarkDown\\MarkDown.csproj",
+              "RelativeDocumentMoniker": "MarkDown\\MarkDown.csproj",
+              "ToolTip": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\MarkDown\\MarkDown.csproj",
+              "RelativeToolTip": "MarkDown\\MarkDown.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-09-20T10:32:27.327Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Class1.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\MarkDown\\Class1.cs",
+              "RelativeDocumentMoniker": "MarkDown\\Class1.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\murkdown\\clean-code\\MarkDown\\MarkDown\\Class1.cs",
+              "RelativeToolTip": "MarkDown\\Class1.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-20T08:46:07.35Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
