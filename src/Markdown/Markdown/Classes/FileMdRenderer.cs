@@ -6,6 +6,7 @@ namespace Markdown.Classes;
 public class FileMdRenderer: IRenderer
 {
     public readonly string PathToFile;
+    public string RenderedMdText { get; private set; }
     
     public FileMdRenderer(string pathToFile)
     {

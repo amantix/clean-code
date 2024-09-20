@@ -9,6 +9,8 @@ public class TextParser: IParser
     // В контексте данного класса строка textToBeMarkdown - строка, которую нужно превратить в html
     public bool Parse(string textToBeMarkdown, List<TokenType> tokens)
     {
+        // Заглушка для тестирования
+        return true;
         throw new NotImplementedException();
     }
 }
