@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35208.52
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdwn", "Markdwn.csproj", "{7E76C887-D2A3-4131-B253-BDE0D8088CFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Markdown", "Markdown.csproj", "{7E76C887-D2A3-4131-B253-BDE0D8088CFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdownTest", "..\MarkdownTest\MarkdownTest.csproj", "{F8F4F421-D0CA-44AF-9684-A8E05DFFED67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkdownTest", "..\MarkdownTest\MarkdownTest.csproj", "{F8F4F421-D0CA-44AF-9684-A8E05DFFED67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
