@@ -5,12 +5,10 @@ namespace Markdown.Classes;
 
 public class ConsoleMdRenderer: IRenderer
 {
-    public string RenderedMdText { get; private set; }
-    
-    public bool RenderMarkdown(List<TokenType> tokens)
+    public string RenderMarkdown(List<TokenType> tokens)
     {
         // Заглушка для тестирования
-        return true;
+        return string.Empty;
         // Здесь как-то выводим результат в консоль
         throw new NotImplementedException();
     }

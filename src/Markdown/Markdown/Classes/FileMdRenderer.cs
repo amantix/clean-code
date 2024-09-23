@@ -5,15 +5,14 @@ namespace Markdown.Classes;
 
 public class FileMdRenderer: IRenderer
 {
-    public readonly string PathToFile;
-    public string RenderedMdText { get; private set; }
+    public readonly string PathToFileToWrite;
     
-    public FileMdRenderer(string pathToFile)
+    public FileMdRenderer(string pathToFileToWrite)
     {
-        PathToFile = pathToFile;
+        PathToFileToWrite = pathToFileToWrite;
     }
     
-    public bool RenderMarkdown(List<TokenType> tokens)
+    public string RenderMarkdown(List<TokenType> tokens)
     {   // Здесь как-то записываем html в файлик по директории PathToFile
         throw new NotImplementedException();
     }

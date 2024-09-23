@@ -4,10 +4,10 @@ using Markdown.Interfaces;
 namespace Markdown.Classes;
 
 // Парсит строку и придает желательно ей какой-то рабочий вид
-public class TextParser: IParser
+public class StringParser: IParser
 {
     // В контексте данного класса строка textToBeMarkdown - строка, которую нужно превратить в html
-    public bool Parse(string textToBeMarkdown, List<TokenType> tokens)
+    public bool TryParse(string textToBeMarkdown, List<TokenType> tokens)
     {
         // Заглушка для тестирования
         return true;

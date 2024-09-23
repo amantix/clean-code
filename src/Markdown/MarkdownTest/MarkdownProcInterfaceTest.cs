@@ -10,9 +10,9 @@ public class MarkdownProcInterfaceTest
     public void Test1()
     {
         // Arrange
-        var parser = new TextParser();
+        var parser = new StringParser();
         var renderer = new ConsoleMdRenderer();
-        var mdProc = new Md(parser, renderer);
+        var mdProc = new MdProcessor(parser, renderer);
         var input = "__text__";
         var expectedOutput = "<b>text</b>";
 
