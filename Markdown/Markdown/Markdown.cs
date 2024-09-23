@@ -5,31 +5,21 @@ namespace Markdown;
 public class Markdown
 {
 
-    public string GetHtml(string markdownString)
+    public string GetHtml(string markdownText)
     {
-        var lines = SplitString(markdownString);
-        var html = Render(lines);
+        var html = Render(markdownText);
         return html.ToString();
+        //хотел сам рэндер текста и получение html разделить, но не уверен нужно ли это
     }
 
-    private StringBuilder Render(string[] lines)
+    private StringBuilder Render(string markdownText)
     {
         var html = new StringBuilder();
-        foreach (var line in lines)
-        {
-            IMarkdownElement element = CreateMarkdownElement(line);
-            html.Append(element.GetHtmlLine());
-        }
         return html;
     }
     
-    private string[] SplitString(string text)
+    private IMarkdownElement CreateElement(string line)
     {
-        return text.Split(new[] { " ", "\n" }, StringSplitOptions.RemoveEmptyEntries);//строка делится на слова отдельные
-    }
-
-    private IMarkdownElement CreateMarkdownElement(string line)
-    {
-        return null; //продумать логигу создания подходящего markdown элемента, скорее всего как-то через стэк
+        return null; //продумать логигу создания подходящего класса элемента, скорее всего как-то через стэк
     }
 }
