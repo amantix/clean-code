@@ -25,7 +25,7 @@ public class Markdown
     
     private string[] SplitString(string text)
     {
-        return text.Split(new[] { " ", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        return text.Split(new[] { " ", "\n" }, StringSplitOptions.RemoveEmptyEntries);//строка делится на слова отдельные
     }
 
     private IMarkdownElement CreateMarkdownElement(string line)

@@ -1,14 +1,16 @@
 namespace Markdown;
-//решил добавить на случай, если просто текст, чтобы он хоть в какой-то тэг был обёрнут
+
 public class ParagraphMarkdownElement 
 {
     private string text;
+    private string openingTag = "<p>";
+    private string closingTag = "</p>";
     public ParagraphMarkdownElement(string line)
     {
         text = line;
     }
     public string GetHtmlLine()
     {
-        return $"<p>{text}</p>";
+        return $"{openingTag}{text}{closingTag}";
     }
 }
