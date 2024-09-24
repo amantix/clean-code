@@ -7,7 +7,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a0c5167-1aa7-468c-8af7-c1df3223f1df" name="Changes" comment="" />
+    <list default="true" id="7a0c5167-1aa7-468c-8af7-c1df3223f1df" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Markdown/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Markdown/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Markdown/Classes/Parser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/Classes/Parser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Markdown/Classes/Renderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/Classes/Renderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Markdown/Classes/Token.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/Classes/Token.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Markdown/Enums/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/Enums/Tag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Markdown/Interfaces/IParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/Interfaces/IParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Markdown/Interfaces/IRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/Interfaces/IRenderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Markdown/MdProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/MdProcessor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MarkdownTests/MarkdownTests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/MarkdownTests/MarkdownTests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MarkdownTests/MdProcessorTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MarkdownTests/MdProcessorTest.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,7 +40,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Development",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -46,7 +57,7 @@
     ]
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected=".NET Project.Markdown">
     <configuration name="Markdown" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -74,7 +85,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1727171938219</updated>
-      <workItem from="1727171939353" duration="2021000" />
+      <workItem from="1727171939353" duration="4708000" />
     </task>
     <servers />
   </component>
