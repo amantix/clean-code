@@ -2,12 +2,12 @@
 
 namespace Markdown.Classes;
 
-public class MarkdownCPU
+public class MarkdownProcessor
 {
     private IParser parser;
     private IRenderer renderer;
 
-    public MarkdownCPU(IParser parser, IRenderer renderer)
+    public MarkdownProcessor(IParser parser, IRenderer renderer)
     {
         this.parser = parser;
         this.renderer = renderer;
@@ -17,8 +17,8 @@ public class MarkdownCPU
     public string ConvertToHTML(string text)
     {
         var tmpList = new List<Token>();
-        parser.Parse(text, tmpList);
-        renderer.Render(tmpList, out string outputLine);
+        parser.TryParse(text, tmpList);
+        renderer.TryRender(tmpList, out string outputLine);
 
         return "<h1>header</h1>";
     }

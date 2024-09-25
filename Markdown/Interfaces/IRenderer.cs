@@ -10,5 +10,5 @@ public interface IRenderer
     /// <param name="tokens">Список токенов для составления HTML-кода</param>
     /// <param name="outputLine">HTML-код</param>
     /// <returns>Удалось ли отрендерить список токенов</returns>
-    bool Render(List<Token> tokens, out string outputLine);
+    bool TryRender(List<Token> tokens, out string outputLine);
 }
