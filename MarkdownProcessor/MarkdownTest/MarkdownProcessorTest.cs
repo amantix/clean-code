@@ -8,8 +8,8 @@ public class MarkdownProcessorTest
     public void ConvertToHtml_Should_Handle_Headers()
     {
         var markdownProcessor = new MarkdownProcessor();
-        var markdownText = "#Заголовок";
-        var expectedHtml = "<h1>Заголовок</h1>";
+        var markdownText = "#Headline";
+        var expectedHtml = "<h1>Headline</h1>";
         var actualHtml = markdownProcessor.ConvertToHtml(markdownText);
 
         Assert.Equal(expectedHtml, actualHtml);
@@ -19,8 +19,8 @@ public class MarkdownProcessorTest
     public void ConvertToHtml_Should_Handle_Bold_Text()
     {
         var markdownProcessor = new MarkdownProcessor();
-        var markdownText = "**Жирный текст**";
-        var expectedHtml = "<strong>Жирный текст</strong>";
+        var markdownText = "**Bold text**";
+        var expectedHtml = "<strong>Bold text</strong>";
         var actualHtml = markdownProcessor.ConvertToHtml(markdownText);
 
         Assert.Equal(expectedHtml, actualHtml);
@@ -30,8 +30,8 @@ public class MarkdownProcessorTest
     public void ConvertToHtml_Should_Handle_Italic_Text()
     {
         var markdownProcessor = new MarkdownProcessor();
-        var markdownText = "*Курсивный текст*";
-        var expectedHtml = "<em>Курсивный текст</em>";
+        var markdownText = "*Italic text*";
+        var expectedHtml = "<em>Italic text</em>";
         var actualHtml = markdownProcessor.ConvertToHtml(markdownText);
 
         Assert.Equal(expectedHtml, actualHtml);
@@ -41,8 +41,8 @@ public class MarkdownProcessorTest
     public void ConvertToHtml_Should_Handle_Line_Breaks()
     {
         var markdownProcessor = new MarkdownProcessor();
-        var markdownText = "Строка 1\n Строка 2";
-        var expectedHtml = "Строка 1<br> Строка 2";
+        var markdownText = "line 1\n Line 2";
+        var expectedHtml = "Line 1<br> Line 2";
         var actualHtml = markdownProcessor.ConvertToHtml(markdownText);
 
         Assert.Equal(expectedHtml, actualHtml);
