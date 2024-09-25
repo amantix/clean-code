@@ -41,8 +41,8 @@ public class MarkdownProcessorTest
     public void ConvertToHtml_Should_Handle_Line_Breaks()
     {
         var markdownProcessor = new MarkdownProcessor();
-        var markdownText = "Строка 1\nСтрока 2";
-        var expectedHtml = "Строка 1<br>Строка 2";
+        var markdownText = "Строка 1\n Строка 2";
+        var expectedHtml = "Строка 1<br> Строка 2";
         var actualHtml = markdownProcessor.ConvertToHtml(markdownText);
 
         Assert.Equal(expectedHtml, actualHtml);
