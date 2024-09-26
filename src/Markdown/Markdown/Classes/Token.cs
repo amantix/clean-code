@@ -4,6 +4,6 @@ namespace Markdown.Classes;
 
 public struct Token
 {
-    public readonly TokenType type;
+    public readonly TokenType Type;
     public string Content { get; set; }
 }
