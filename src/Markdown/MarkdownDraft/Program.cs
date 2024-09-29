@@ -13,9 +13,9 @@ class Program
         string str2 = "_dawdawdadwad_  fadawdwa";
         string str3 = "_dawdawdadwad_ ";
         string str4 = "_dawdawdadwad";
-        string str5 = "_нач_але, и в сер_еди_не, и в кон_це._";
+        string str5 = "_";
 
-        foreach (var VARIABLE in Parse(str5))
+        foreach (var VARIABLE in Parse(str4))
         {
             Console.Write($"({VARIABLE.Type}: {VARIABLE.Content})  |  ");
         }
@@ -25,6 +25,7 @@ class Program
 
     public static List<Token> Parse(string str)
     {
+
         // Как будто бы кстати очищать 
         // Token curToken = new Token();
         // необязательно
@@ -37,9 +38,86 @@ class Program
         Token curToken = new Token();
         
         for (int i = 0; i <= endIndex; ++i)
-        {   
+        {
+            if (str[i] == '#')
+            {
+                HandleHeader(ref i);
+            }
+
+            if (i != endIndex && str[i] == '_' && str[i + 1] == '_')
+            {
+                HandleBold(ref i);
+            }
+            
             if (str[i] == '_')
             {
+                HandleTtalics(ref i);
+            }
+            
+            // Записываем простые символы, которые не являются никак выделенными
+            if (i < endIndex)
+                curString.Append(str[i]);
+            else if (i == endIndex)
+            {
+                // Если остались символы в конце строки после курсива
+                curString.Append(str[i]);
+                curToken.Type = TokenType.Text;
+                curToken.Content = curString.ToString();
+                tokens.Add(curToken);
+            }
+        }
+
+        void HandleHeader(ref int i)
+        {
+            // Если перед встречей с заголовком был простой текст
+            if (curString.Length > 0)
+            {
+                curToken.Type = TokenType.Text;
+                curToken.Content = curString.ToString();
+                tokens.Add(curToken);
+                // Очищаем
+                curToken = new Token();
+                curString = curString.Clear();
+            }
+
+            endOfToken = false;
+            int localIndex = i + 1;
+
+            while (localIndex <= endIndex)
+            {
+                if (str[localIndex] == '\n')
+                {
+                    curToken.Type = TokenType.Header;
+                    curToken.Content = curString.ToString();
+                    endOfToken = true;
+                    break;
+                }
+                    
+                curString.Append(str[localIndex]);
+                ++localIndex;
+            }
+                
+            if (!endOfToken)
+            {
+                curToken.Type = TokenType.Header;
+                curToken.Content = curString.ToString();
+                endOfToken = true;
+            }
+                
+            tokens.Add(curToken);
+            curToken = new Token();
+            curString = curString.Clear();
+            endOfToken = true;
+        }
+
+        void HandleBold(ref int i)
+        {
+            
+        }
+        
+        void HandleTtalics(ref int i) // Обработка потенциального курсива ("_")
+        {
+            
                 // Если перед встречей с курсивом был простой текст
                 if (curString.Length > 0)
                 {
@@ -107,23 +185,8 @@ class Program
                 endOfToken = true;
                 // Потому что текущее слово закончилось
                 i = localIndex + step;
-            }
-            
-            // Записываем простые символы, которые не являются никак выделенными
-            if (i < endIndex)
-                curString.Append(str[i]);
-            else if (i == endIndex)
-            {
-                // Если остались символы в конце строки после курсива
-                curString.Append(str[i]);
-                curToken.Type = TokenType.Text;
-                curToken.Content = curString.ToString();
-                tokens.Add(curToken);
-            }
         }
         
-        
-
         return tokens;
     }
 
