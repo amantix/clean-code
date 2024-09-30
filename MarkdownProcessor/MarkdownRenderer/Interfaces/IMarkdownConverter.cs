@@ -13,12 +13,5 @@ namespace MarkdownRenderer.Interfaces
         /// <param name="unprocessedText">Markdown текст.</param>
         /// <returns>Строка с html страничкой.</returns>
         string ConvertToHtml(string unprocessedText);
-
-        /// <summary>
-        /// Преобразует markdown текст только в html фрагмент.
-        /// </summary>
-        /// <param name="unprocessedText">Markdown текст.</param>
-        /// <returns>Строка с html фрагментом.</returns>
-        string ConvertToHtmlFragment(string unprocessedText);
     }
 }

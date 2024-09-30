@@ -4,14 +4,9 @@ namespace MarkdownRenderer
 {
     public class MarkdownConverter : IMarkdownConverter
     {
-        public string ConvertToHtmlFragment(string unprocessedText)
+        public string ConvertToHtml(string unprocessedText)
         {
-            throw new NotImplementedException();
-        }
-
-        string IMarkdownConverter.ConvertToHtml(string unprocessedText)
-        {
-            throw new NotImplementedException();
+            return unprocessedText;
         }
     }
 }

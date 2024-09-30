@@ -4,8 +4,8 @@ namespace MarkdownRenderer.Tags
 {
     public class BoldTag : Tag
     {
-        public override string MarkdownSymbol => "**";
+        public override string MarkdownSymbol => "__";
 
-        public override string HtmlTag => "b";
+        public override string HtmlTag => "strong";
     }
 }
