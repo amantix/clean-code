@@ -34,23 +34,13 @@ namespace MarkdownRenderer
 
                 var currentTag = TagsDictionary[currentSymbol];
 
-                if (_tagPositionsStack.Count > 0)
+                if (CheckTagCompatibility(currentSymbol, i, unprocessedText))
                 {
-                    if (CheckTagCompatibility(currentSymbol, i, unprocessedText))
+                    if (CheckIfClosingTag(currentSymbol))
                     {
-                        if (CheckIfClosingTag(currentSymbol))
-                        {
-                            AddToken(i, currentTag);
-                        }
-                        else
-                        {
-                            PushTagPosition(i, currentTag);
-                        }
+                        AddToken(i, currentTag);
                     }
-                }
-                else
-                {
-                    if (CheckTagCompatibility(currentSymbol, i, unprocessedText))
+                    else
                     {
                         PushTagPosition(i, currentTag);
                     }
@@ -77,8 +67,7 @@ namespace MarkdownRenderer
 
         private bool CheckIfClosingTag(string mdSymbol)
         {
-            var previousTagPosition = _tagPositionsStack.Peek();
-            if (previousTagPosition.Tag.MarkdownSymbol == mdSymbol)
+            if (_tagPositionsStack.TryPeek(out var previousTagPosition) && previousTagPosition.Tag.MarkdownSymbol == mdSymbol)
             {
                 return true;
             }
@@ -88,12 +77,20 @@ namespace MarkdownRenderer
 
         private bool CheckTagCompatibility(string mdSymbol, int index, string unprocessedText)
         {
-
             bool isPossibleAdd = CheckPreviousTagCompatibility(mdSymbol)
                                  && CheckForSpacesAfter(mdSymbol, index, unprocessedText)
-                                 && CheckForSpacesBefore(mdSymbol, index, unprocessedText);
+                                 && CheckForSpacesBefore(mdSymbol, index, unprocessedText)
+                                 && CheckForWithinNumbers(unprocessedText, index);
 
             return isPossibleAdd;
+        }
+
+        private bool CheckForWithinNumbers(string unprocessedText, int index)
+        {
+            bool isSurroundedByNumbers = false;
+
+            return (index > 0 && char.IsDigit(unprocessedText[index - 1])) &&
+                   (index < unprocessedText.Length - 1 && char.IsDigit(unprocessedText[index + 1]));
         }
 
         private bool CheckForSpacesBefore(string mdSymbol, int index, string unprocessedText)
