@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Reflection;
+using System.Text;
 using MarkdownRenderer.Abstractions;
 using MarkdownRenderer.Enums;
 using MarkdownRenderer.Interfaces;
@@ -8,98 +10,120 @@ namespace MarkdownRenderer
     public class TokensParser : ITokensParser
     {
         public IDictionary<string, Tag> TagsDictionary { get; set; }
-        private Stack<TagPosition>? TagPositionsStack { get; set; }
-        private List<Token> _tokens;
+        private Stack<TagPosition> _tagPositionsStack = new Stack<TagPosition>();
+        private List<Token> _tokens = new List<Token>();
 
         public TokensParser(IDictionary<string, Tag> tagsDictionary)
         {
             TagsDictionary = tagsDictionary;
-            TagPositionsStack = new Stack<TagPosition>();
-            _tokens = new List<Token>();
         }
 
         public IEnumerable<Token> ParseTokens(string unprocessedText)
         {
-            bool isEscaped = false;
-
             for (int i = 0; i < unprocessedText.Length; i++)
             {
-                int currentIndex = i;
-                var result = ProcessCharacter(unprocessedText, ref i, ref isEscaped);
-                if (result.HasValue)
+                string currentSymbol = HandleMarkdownSymbols(i, unprocessedText);
+
+                int offset = CountOffset(currentSymbol);
+
+                if (!CheckIsTag(currentSymbol))
                 {
-                    var (currentSymbol, isValid) = result.Value;
+                    i += offset;
+                    continue;
+                }
 
-                    if (!isValid)
-                        continue;
+                var currentTag = TagsDictionary[currentSymbol];
 
-                    var currentTag = TagsDictionary[currentSymbol];
-
-                    if (TagPositionsStack.TryPeek(out var tagFromStack) && tagFromStack.Tag.MarkdownSymbol == currentSymbol)
+                if (_tagPositionsStack.Count > 0)
+                {
+                    if (CheckTagCompatibility(currentSymbol))
                     {
-
-                        if (i > 0 && !char.IsWhiteSpace(unprocessedText[currentIndex - 1]))
+                        if (CheckIfClosingTag(currentSymbol))
                         {
-                            var openingTag = TagPositionsStack.Pop();
-                            _tokens.Add(new Token(openingTag.Tag,
-                                openingTag.StartIndex, i, currentTag.TagType));
+                            AddToken(i, currentTag);
                         }
-                    }
-                    else
-                    {
-                        if (TagPositionsStack.Count > 0)
+                        else
                         {
-                            var topTag = TagPositionsStack.Peek().Tag;
-
-                            if (topTag.MarkdownSymbol == "_" && currentSymbol == "__")
-                            {
-                                continue;
-                            }
+                            PushTagPosition(i, currentTag);
                         }
-
-                        TagPositionsStack.Push(new TagPosition(currentTag, i, currentTag.TagType));
                     }
                 }
+                else
+                {
+                    PushTagPosition(i, currentTag);
+                }
+
+                i += offset;
             }
 
             return _tokens;
         }
 
-        private (string currentSymbol, bool isValid)? ProcessCharacter(string text, ref int index, ref bool isEscaped)
+        private void AddToken(int index, Tag currentTag)
         {
-            if (text[index] == '\\')
-            {
-                if (index + 1 < text.Length && (text[index + 1] == '_' || text[index + 1] == '\\'))
-                {
-                    index++; 
-                    isEscaped = true;
-                    return (text[index].ToString(), false);
-                }
-                else
-                {
-                    isEscaped = false;
-                    return null;
-                }
-            }
-
-            string currentSymbol = HandleMarkdownSymbols(text[index].ToString(), ref index, text);
-
-            if (isEscaped || !CheckIsTag(currentSymbol))
-            {
-                isEscaped = false;
-                return null;
-            }
-
-            return (currentSymbol, true);
+            var openingTag = _tagPositionsStack.Pop();
+            _tokens.Add(new Token(openingTag.Tag,
+                openingTag.StartIndex, index, currentTag.TagType));
         }
 
-        private string HandleMarkdownSymbols(string symbol, ref int index, string unprocessedText)
+        private void PushTagPosition(int index, Tag currentTag)
         {
-            if (symbol == "_" && index < unprocessedText.Length - 1 && unprocessedText[index + 1] == '_')
+            var currentTagPosition = new TagPosition(currentTag, index, currentTag.TagType);
+            _tagPositionsStack.Push(currentTagPosition);
+        }
+
+        private bool CheckIfClosingTag(string mdSymbol)
+        {
+            var previousTagPosition = _tagPositionsStack.Peek();
+            if (previousTagPosition.Tag.MarkdownSymbol == mdSymbol)
             {
-                index++; 
-                return "__";
+                return true;
             }
+
+            return false;
+        }
+
+        private bool CheckTagCompatibility(string mdSymbol)
+        {
+            bool isPossibleAdd = _tagPositionsStack.Count > 0
+                                 && CheckPreviousTagCompatibility(mdSymbol);
+
+            return isPossibleAdd;
+        }
+
+        private bool CheckPreviousTagCompatibility(string mdSymbol)
+        {
+            var previousTagPosition = _tagPositionsStack.Peek();
+
+            if (mdSymbol == "__" && previousTagPosition.Tag.MarkdownSymbol == "_")
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private int CountOffset(string currentSymbol)
+        {
+            int offset = currentSymbol.Length - 1;
+
+            return offset;
+        }
+
+        private string HandleMarkdownSymbols(int index, string unprocessedText)
+        {
+            if (unprocessedText[index].ToString() == "_" && index < unprocessedText.Length - 1 && unprocessedText[index + 1] == '_')
+                return "__";
+
+            if (unprocessedText[index].ToString() == "\\" && index > 0 && unprocessedText[index - 1] == '\\')
+                return "\\";
+
+            if (unprocessedText[index].ToString() == "\\" && index < unprocessedText.Length - 1 && unprocessedText[index + 1] == '_')
+                return "\\_";
+
+            if (unprocessedText[index].ToString() == "\\" && index < unprocessedText.Length - 2
+                                                          && unprocessedText[index + 1] == '_' && unprocessedText[index + 2] == '_')
+                return "\\__";
 
             return unprocessedText[index].ToString();
         }
