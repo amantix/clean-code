@@ -36,7 +36,7 @@ namespace MarkdownRenderer
 
                 if (_tagPositionsStack.Count > 0)
                 {
-                    if (CheckTagCompatibility(currentSymbol))
+                    if (CheckTagCompatibility(currentSymbol, i, unprocessedText))
                     {
                         if (CheckIfClosingTag(currentSymbol))
                         {
@@ -50,7 +50,10 @@ namespace MarkdownRenderer
                 }
                 else
                 {
-                    PushTagPosition(i, currentTag);
+                    if (CheckTagCompatibility(currentSymbol, i, unprocessedText))
+                    {
+                        PushTagPosition(i, currentTag);
+                    }
                 }
 
                 i += offset;
@@ -83,21 +86,73 @@ namespace MarkdownRenderer
             return false;
         }
 
-        private bool CheckTagCompatibility(string mdSymbol)
+        private bool CheckTagCompatibility(string mdSymbol, int index, string unprocessedText)
         {
-            bool isPossibleAdd = _tagPositionsStack.Count > 0
-                                 && CheckPreviousTagCompatibility(mdSymbol);
+
+            bool isPossibleAdd = CheckPreviousTagCompatibility(mdSymbol)
+                                 && CheckForSpacesAfter(mdSymbol, index, unprocessedText)
+                                 && CheckForSpacesBefore(mdSymbol, index, unprocessedText);
 
             return isPossibleAdd;
         }
 
+        private bool CheckForSpacesBefore(string mdSymbol, int index, string unprocessedText)
+        {
+            bool isFirstTag = !(_tagPositionsStack.TryPeek(out var previousTagPosition));
+
+            if (index > 0 && unprocessedText[index - 1] == ' ')
+            {
+                // Если тег первый, то все равно что перед ним было, значит он точно открывающийся 
+                if (isFirstTag)
+                {
+                    return true;
+                }
+
+                if (previousTagPosition.Tag.MarkdownSymbol == mdSymbol)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool CheckForSpacesAfter(string mdSymbol, int index, string unprocessedText)
+        {
+            bool isFirstTag = !(_tagPositionsStack.TryPeek(out var previousTagPosition));
+
+            if (index < unprocessedText.Length - 1 && unprocessedText[index + 1] == ' ')
+            {
+                // Если даже это первый тег, то после него все равно не должно быть никаких пробелов, так как он сто процентов откывающийся
+                if (isFirstTag)
+                {
+                    return false;
+                }
+
+                if (previousTagPosition.Tag.MarkdownSymbol != mdSymbol)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private bool CheckPreviousTagCompatibility(string mdSymbol)
         {
-            var previousTagPosition = _tagPositionsStack.Peek();
+            bool isFirstTag = !(_tagPositionsStack.TryPeek(out var previousTagPosition));
 
-            if (mdSymbol == "__" && previousTagPosition.Tag.MarkdownSymbol == "_")
+            if (mdSymbol == "__")
             {
-                return false;
+                if (isFirstTag)
+                {
+                    return true;
+                }
+
+                if (previousTagPosition.Tag.MarkdownSymbol == "_")
+                {
+                    return false;
+                }
             }
 
             return true;
@@ -112,13 +167,16 @@ namespace MarkdownRenderer
 
         private string HandleMarkdownSymbols(int index, string unprocessedText)
         {
-            if (unprocessedText[index].ToString() == "_" && index < unprocessedText.Length - 1 && unprocessedText[index + 1] == '_')
+            if (unprocessedText[index].ToString() == "_" && index < unprocessedText.Length - 1
+                                                         && unprocessedText[index + 1] == '_')
                 return "__";
 
-            if (unprocessedText[index].ToString() == "\\" && index > 0 && unprocessedText[index - 1] == '\\')
+            if (unprocessedText[index].ToString() == "\\" && index > 0
+                                                          && unprocessedText[index - 1] == '\\')
                 return "\\";
 
-            if (unprocessedText[index].ToString() == "\\" && index < unprocessedText.Length - 1 && unprocessedText[index + 1] == '_')
+            if (unprocessedText[index].ToString() == "\\" && index < unprocessedText.Length - 1
+                                                          && unprocessedText[index + 1] == '_')
                 return "\\_";
 
             if (unprocessedText[index].ToString() == "\\" && index < unprocessedText.Length - 2
