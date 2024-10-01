@@ -9,12 +9,14 @@ namespace MarkdownRenderer
         public Tag Tag { get; set; }
         public int StartIndex { get; set; }
         public int EndIndex { get; set; }
-        
-        public Token(Tag tag, int startIndex, int endIndex)
+        public TagType TagType { get; }
+
+        public Token(Tag tag, int startIndex, int endIndex, TagType tagType)
         {
             Tag = tag;
             StartIndex = startIndex;
             EndIndex = endIndex;
+            TagType = tagType;
         }
     }
 }

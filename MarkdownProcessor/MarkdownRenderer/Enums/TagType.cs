@@ -2,8 +2,7 @@
 {
     public enum TagType
     {
-        EmptyTag = 1,
-        BoldTag = 2,
-        ItalicTag = 3,
+        ItalicTag = 1,  
+        BoldTag = 2   
     }
 }

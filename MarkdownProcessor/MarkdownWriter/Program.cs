@@ -22,7 +22,7 @@ class Program
         };
 
         var tokensParser = new TokensParser(tagsDictionary);
-        var allTokens = tokensParser.ParseTokens("\\\\_вот это будет выделено тегом_");
+        var allTokens = tokensParser.ParseTokens("Иначе эти_ подчерки_");
 
         foreach (var token in allTokens)
         {

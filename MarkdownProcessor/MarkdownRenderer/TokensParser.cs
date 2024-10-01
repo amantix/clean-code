@@ -24,6 +24,7 @@ namespace MarkdownRenderer
 
             for (int i = 0; i < unprocessedText.Length; i++)
             {
+                int currentIndex = i;
                 var result = ProcessCharacter(unprocessedText, ref i, ref isEscaped);
                 if (result.HasValue)
                 {
@@ -36,12 +37,27 @@ namespace MarkdownRenderer
 
                     if (TagPositionsStack.TryPeek(out var tagFromStack) && tagFromStack.Tag.MarkdownSymbol == currentSymbol)
                     {
-                        var openingTag = TagPositionsStack.Pop();
-                        _tokens.Add(new Token(openingTag.Tag, openingTag.StartIndex, i));
+
+                        if (i > 0 && !char.IsWhiteSpace(unprocessedText[currentIndex - 1]))
+                        {
+                            var openingTag = TagPositionsStack.Pop();
+                            _tokens.Add(new Token(openingTag.Tag,
+                                openingTag.StartIndex, i, currentTag.TagType));
+                        }
                     }
                     else
                     {
-                        TagPositionsStack.Push(new TagPosition(currentTag, i));
+                        if (TagPositionsStack.Count > 0)
+                        {
+                            var topTag = TagPositionsStack.Peek().Tag;
+
+                            if (topTag.MarkdownSymbol == "_" && currentSymbol == "__")
+                            {
+                                continue;
+                            }
+                        }
+
+                        TagPositionsStack.Push(new TagPosition(currentTag, i, currentTag.TagType));
                     }
                 }
             }
@@ -53,11 +69,20 @@ namespace MarkdownRenderer
         {
             if (text[index] == '\\')
             {
-                isEscaped = !isEscaped;
-                return null;
+                if (index + 1 < text.Length && (text[index + 1] == '_' || text[index + 1] == '\\'))
+                {
+                    index++; 
+                    isEscaped = true;
+                    return (text[index].ToString(), false);
+                }
+                else
+                {
+                    isEscaped = false;
+                    return null;
+                }
             }
 
-            string currentSymbol = HandleMarkdownSymbols(text[index].ToString(), index, text);
+            string currentSymbol = HandleMarkdownSymbols(text[index].ToString(), ref index, text);
 
             if (isEscaped || !CheckIsTag(currentSymbol))
             {
@@ -68,11 +93,12 @@ namespace MarkdownRenderer
             return (currentSymbol, true);
         }
 
-        private string HandleMarkdownSymbols(string symbol, int index, string unprocessedText)
+        private string HandleMarkdownSymbols(string symbol, ref int index, string unprocessedText)
         {
             if (symbol == "_" && index < unprocessedText.Length - 1 && unprocessedText[index + 1] == '_')
-            {  
-                return "__"; 
+            {
+                index++; 
+                return "__";
             }
 
             return unprocessedText[index].ToString();

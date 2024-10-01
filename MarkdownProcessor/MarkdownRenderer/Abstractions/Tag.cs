@@ -1,4 +1,6 @@
-﻿namespace MarkdownRenderer.Abstractions
+﻿using MarkdownRenderer.Enums;
+
+namespace MarkdownRenderer.Abstractions
 {
     /// <summary>
     /// Базовый абстрактный класс, для всех тегов
@@ -19,6 +21,7 @@
         /// </summary>
         /// <param name="content">Текст между тегами.</param>
         /// <returns>Строка, обернутая в html теги.</returns>
+        public abstract TagType TagType { get; }
         public virtual string ConvertToHtmlTag(string content)
         {
             return $"<{HtmlTag}>{content}</{HtmlTag}>";

@@ -1,4 +1,5 @@
 ﻿using MarkdownRenderer.Abstractions;
+using MarkdownRenderer.Enums;
 
 namespace MarkdownRenderer.Tags
 {
@@ -7,5 +8,6 @@ namespace MarkdownRenderer.Tags
         public override string MarkdownSymbol => "__";
 
         public override string HtmlTag => "strong";
+        public override TagType TagType => TagType.BoldTag;
     }
 }
