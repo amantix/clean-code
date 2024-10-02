@@ -22,7 +22,7 @@ class Program
         };
 
         var tokensParser = new TokensParser(tagsDictionary);
-        var allTokens = tokensParser.ParseTokens("_эти_ _подчерки_ не считаютс");
+        var allTokens = tokensParser.ParseTokens("прив");
         foreach (var token in allTokens)
         {
             Console.WriteLine(token.Tag.MarkdownSymbol);
