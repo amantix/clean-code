@@ -6,202 +6,142 @@ class Program
 {
     static void Main(string[] args)
     {
-        // ВАЖНО
-        // Когда будем делать функцию валидации парсинга, нужно объединить несколько подряд идующих
-        // токенов текст в один токен
-        string str1 = "_dawdawdadwad_";
-        string str2 = "_dawdawdadwad_  fadawdwa";
-        string str3 = "_dawdawdadwad_ ";
-        string str4 = "_dawdawdadwad";
-        string str5 = "_";
+        string input = "__dadawdaw _wdwadawd_ wdadawdawdawd__";
 
-        foreach (var VARIABLE in Parse(str4))
+        var result = Parse(input);
+        foreach (var VARIABLE in result)
         {
-            Console.Write($"({VARIABLE.Type}: {VARIABLE.Content})  |  ");
+            Console.WriteLine($"{VARIABLE.Type}: {VARIABLE.StartIndex} - {VARIABLE.EndIndex}");
+            foreach (var token in VARIABLE.InsideTokens)
+            {
+                Console.WriteLine($"\t{token.Type}: {token.StartIndex} - {token.EndIndex}");
+            }
+
+            Console.WriteLine("=================================================");
         }
-        
-        
     }
 
     public static List<Token> Parse(string str)
     {
+        var splittedString = str.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        var listOfSpecialSymbols = new List<SpecialSymbol>();
+        Stack<SpecialSymbol> openSymbolsStack = new Stack<SpecialSymbol>();
+        var tokens = new List<Token>();
 
-        // Как будто бы кстати очищать 
-        // Token curToken = new Token();
-        // необязательно
-        List<Token> tokens = new List<Token>();
-        
-        var endIndex = str.Length - 1;
-        
-        var curString = new StringBuilder();
-        var endOfToken = true;
-        Token curToken = new Token();
-        
-        for (int i = 0; i <= endIndex; ++i)
+        for (int i = 0; i < str.Length; i++)
         {
             if (str[i] == '#')
             {
-                HandleHeader(ref i);
+                /*if (isHeaderOpened)
+                list.Add(new Token()
+                {
+
+                });
+                isHeaderOpened = true;*/
+                // func();
+                continue;
             }
 
-            if (i != endIndex && str[i] == '_' && str[i + 1] == '_')
+            if (str[i] == '\n')
             {
-                HandleBold(ref i);
+                // isHeaderOpened = false;
+                // Добавить в стек закрывающую решетку
             }
-            
+
+            if (i < str.Length - 1 && str.Substring(i, 2) == "__")
+            {
+                listOfSpecialSymbols.Add(new SpecialSymbol { Type = TokenType.Bold, Index = i, Length = 2 });
+                ++i;
+                continue;
+            }
+
             if (str[i] == '_')
             {
-                HandleTtalics(ref i);
+                listOfSpecialSymbols.Add(new SpecialSymbol { Type = TokenType.Italics, Index = i, Length = 1 });
             }
-            
-            // Записываем простые символы, которые не являются никак выделенными
-            if (i < endIndex)
-                curString.Append(str[i]);
-            else if (i == endIndex)
-            {
-                // Если остались символы в конце строки после курсива
-                curString.Append(str[i]);
-                curToken.Type = TokenType.Text;
-                curToken.Content = curString.ToString();
-                tokens.Add(curToken);
-            }
-        }
-
-        void HandleHeader(ref int i)
-        {
-            // Если перед встречей с заголовком был простой текст
-            if (curString.Length > 0)
-            {
-                curToken.Type = TokenType.Text;
-                curToken.Content = curString.ToString();
-                tokens.Add(curToken);
-                // Очищаем
-                curToken = new Token();
-                curString = curString.Clear();
-            }
-
-            endOfToken = false;
-            int localIndex = i + 1;
-
-            while (localIndex <= endIndex)
-            {
-                if (str[localIndex] == '\n')
-                {
-                    curToken.Type = TokenType.Header;
-                    curToken.Content = curString.ToString();
-                    endOfToken = true;
-                    break;
-                }
-                    
-                curString.Append(str[localIndex]);
-                ++localIndex;
-            }
-                
-            if (!endOfToken)
-            {
-                curToken.Type = TokenType.Header;
-                curToken.Content = curString.ToString();
-                endOfToken = true;
-            }
-                
-            tokens.Add(curToken);
-            curToken = new Token();
-            curString = curString.Clear();
-            endOfToken = true;
-        }
-
-        void HandleBold(ref int i)
-        {
-            
         }
         
-        void HandleTtalics(ref int i) // Обработка потенциального курсива ("_")
-        {
-            
-                // Если перед встречей с курсивом был простой текст
-                if (curString.Length > 0)
-                {
-                    curToken.Type = TokenType.Text;
-                    curToken.Content = curString.ToString();
-                    tokens.Add(curToken);
-                    // Очищаем
-                    curToken = new Token();
-                    curString = curString.Clear();
-                }
-                
-                // Определяет, насколько нужно перепрыгнуть вперед после окончания парсинга курсива
-                int step = 0;
-                int localIndex = i + 1; // Чтобы начинать добавлять в curString уже после '_'
-                endOfToken = false; // Чтоб проверить по итогу токен закрылся или нет
-                
-                while (localIndex <= endIndex && str[localIndex] != ' ')
-                {
-                    if (str[localIndex] == '_')
-                    {
-                        // Случай когда "... __ ..."
-                        // ВАЖНО
-                        // В будущем нужно будет пересмотреть этот участок
-                        // Либо проводить проверку на if (str[i:i+1] == "__" до
-                        // if (str[i] == '_')
-                        if (localIndex - i == 1)
-                        {
-                            step = 1; // Так как след буква - пробел, ее нужно будет положить в список токенов как текст
-                            curString.Append("__");
-                            curToken.Type = TokenType.Text;
-                            curToken.Content = curString.ToString();
-                            endOfToken = true;
-                            break;
-                        }
-                        
-                        // Случай когда "... _слово_..." или "... _слово_ ..."
-                        curToken.Type = TokenType.Italics;
-                        curToken.Content = curString.ToString();
-                        endOfToken = true;
-                        step = 1;
-                        break;
-                    }   
-                    
-                    curString.Append(str[localIndex]);
-                    ++localIndex;
-                }
-
-                // Случай когда "... _слово ..." или "... _слово" 
-                // Незакрытый тег короче
-                if (!endOfToken)
-                {
-                    curToken.Type = TokenType.Text;
-                    curToken.Content = $"_{curString}";
-                    // Если дело в пробеле, то step = 0
-                    // Если строка и вовсе закончилась, то в принципе специально
-                    // перепрыгнем за границы, чтоб потом на проверке
-                    // никакой символ не добавился
-                    step = (localIndex == endIndex) ? 1 : 0;
-                    endOfToken = true;
-                }
-
-                tokens.Add(curToken);
-                curToken = new Token();
-                curString = curString.Clear();
-                endOfToken = true;
-                // Потому что текущее слово закончилось
-                i = localIndex + step;
-        }
         
+        for (int i = 0; i < listOfSpecialSymbols.Count; i++)
+        {
+            var symbol = listOfSpecialSymbols[i];
+
+            // Если это открывающий символ
+            if (IsOpeningSymbol(symbol, openSymbolsStack))
+            {
+                openSymbolsStack.Push(symbol);
+            }
+            else
+            {
+                // По сути если мы попали в это ветвление, то открывающий тег точно есть
+                // по этому ищем его и удаляем вложенность в закрывающемся теге
+                // Закрывающий символ — ищем пару
+                //
+                // // ВОТ ТУТ НУЖНО ИЗМЕНИТЬ ЛОГИКУ НАХОЖДЕНИЯ ОТКРЫВАЮЩЕГОСЯ 
+                
+                // var openingSymbol = openSymbolsStack.Pop();
+                SpecialSymbol openingSymbol;
+                
+                // По сути если внутри пары тегов, с которыми мы тут работаем, если
+                // и были какие-то теги, то они уже убрались из стека
+                // по этому с чистой душой можем делать .Pop()
+                while ((openingSymbol = openSymbolsStack.Pop()).Type != symbol.Type);
+                
+                var newToken = new Token
+                {
+                    StartIndex = openingSymbol.Index,
+                    EndIndex = symbol.Index + symbol.Length - 1,
+                    Type = symbol.Type,
+                    InsideTokens = ExtractInsideTokens(openingSymbol.Index, symbol.Index, tokens)
+                };
+
+                // Остается одна проблема
+                // Вложенные в другие теги теги все равно будут находиться в tokens
+                // Поэтому лучше их как-то удалить,
+                // сделаю это в методе ExtractInsideTokens
+                tokens.Add(newToken);
+            }
+        }
+
+
         return tokens;
     }
-
-    public static void ValidateParsedText(List<Token> tokens)
+    
+    private static bool IsOpeningSymbol(SpecialSymbol symbol, Stack<SpecialSymbol> stack)
     {
-        var currentText = new StringBuilder();
-        for (int i = tokens.Count - 1; i >= 0; --i)
+        // Определяем, открывающий ли это символ, в зависимости от контекста
+        // Например, можно проверять, что нет открытой пары для символа этого типа в стеке
+        bool openedTagBefore = false;
+
+        foreach (var element in stack)
         {
-            while (i >= 0 && tokens[i].Type == TokenType.Text)
+            if (element.Type == symbol.Type)
             {
-                currentText.Insert(0, tokens[i].Content);
-                tokens.RemoveAt(i);
-                --i;
+                openedTagBefore = true;
             }
-            tokens.Insert(i + 1, new Token{ Type = TokenType.Text, Content = currentText.ToString() });
         }
+        
+        // Проверяем, что стек может быть нулевым, до этого нигде этот открывающийся стек не встречался
+        // Тогда он точно открывающий
+        return  !openedTagBefore;
+    }
+
+    private static List<Token> ExtractInsideTokens(int startIndex, int endIndex, List<Token> tokens)
+    {
+        // Извлекаем вложенные токены, которые лежат внутри текущего токена
+        List<Token> resultToReturn = new List<Token>();
+        // Мы получили в переменную выше токены, которые нужно засунуть
+        // в InsideTokens
+        // Теперь нужно их удалить из главного массива tokens
+        foreach (var token in tokens.ToList())
+        {
+            if (token.StartIndex > startIndex && token.StartIndex < endIndex)
+            {
+                resultToReturn.Add(token);
+                tokens.Remove(token);
+            }
+        }
+
+        return resultToReturn;
     }
 }
