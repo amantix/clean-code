@@ -12,6 +12,7 @@ namespace MarkdownRenderer
         public IDictionary<string, Tag> TagsDictionary { get; set; }
         private Stack<TagPosition> _tagPositionsStack = new Stack<TagPosition>();
         private List<Token> _tokens = new List<Token>();
+        public Dictionary<string, bool> _wordChecks = new Dictionary<string, bool>();
 
         public TokensParser(IDictionary<string, Tag> tagsDictionary)
         {
@@ -20,6 +21,8 @@ namespace MarkdownRenderer
 
         public IEnumerable<Token> ParseTokens(string unprocessedText)
         {
+            ProcessWords(unprocessedText);
+
             for (int i = 0; i < unprocessedText.Length; i++)
             {
                 string currentSymbol = HandleMarkdownSymbols(i, unprocessedText);
@@ -52,6 +55,40 @@ namespace MarkdownRenderer
             return _tokens;
         }
 
+        private void ProcessWords(string unprocessedText)
+        {
+            string[] allWords = unprocessedText.Split(new char[] { ' ', ',', '.' });
+
+            foreach (string word in allWords)
+            {
+                if (!_wordChecks.ContainsKey(word))
+                {
+                    bool canBeFormatted = CanBeFormattedWithTags(word);
+                    _wordChecks.Add(word, canBeFormatted);
+                }
+            }
+
+            if (!_wordChecks.ContainsKey(string.Empty))
+            {
+                _wordChecks.Add(string.Empty, false);
+            }
+        }
+
+        private bool CanBeFormattedWithTags(string word)
+        {
+            if (IsWordContainsNumbers(word))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool IsWordContainsNumbers(string word)
+        {
+            return word.Any(char.IsDigit);
+        }
+
         private void AddToken(int index, Tag currentTag)
         {
             var openingTag = _tagPositionsStack.Pop();
@@ -75,8 +112,27 @@ namespace MarkdownRenderer
             return false;
         }
 
+
+        private bool CheckIsOpenTag(string mdSymbol)
+        {
+            bool isFirstTag = !(_tagPositionsStack.TryPeek(out var previousTagPosition));
+
+            if (isFirstTag)
+            {
+                return true;
+            }
+
+            if (previousTagPosition.Tag.MarkdownSymbol == mdSymbol)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         private bool CheckTagCompatibility(string mdSymbol, int index, string unprocessedText)
         {
+            bool isOpenTag = CheckIsOpenTag(mdSymbol);
             bool isPreviousTagCompatible = CheckPreviousTagCompatibility(mdSymbol);
             bool isSpaceAfter = CheckForSpacesAfter(mdSymbol, index, unprocessedText);
             bool isSpaceBefore = CheckForSpacesBefore(mdSymbol, index, unprocessedText);
@@ -84,12 +140,92 @@ namespace MarkdownRenderer
 
             if (isPreviousTagCompatible && isSpaceAfter && isSpaceBefore && !isEmptyRaw)
             {
-                return CheckTagAtWordPhrase(mdSymbol, index, unprocessedText) ||
-                       CheckInSingleWord(mdSymbol, index, unprocessedText);
+                if (CheckTagAtWordPhrase(mdSymbol, index, unprocessedText))
+                {
+                    if (IsValidTagPosition(index, unprocessedText, isOpenTag))
+                    {
+                        return true;
+                    }
+
+                    string currentWord = GetWordForTag(mdSymbol, index, unprocessedText, isOpenTag);
+
+                    if (_wordChecks[currentWord])
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                if (CheckInSingleWord(mdSymbol, index, unprocessedText))
+                {
+                    string currentWord = GetWordBetweenTags(mdSymbol, index, unprocessedText);
+
+                    if (_wordChecks[currentWord])
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }
             }
 
             return false;
         }
+
+        private bool IsValidTagPosition(int index, string unprocessedText, bool isOpenTag)
+        {
+            if (isOpenTag)
+            {
+                return index == 0 || char.IsWhiteSpace(unprocessedText[index - 1]);
+            }
+
+            return index == unprocessedText.Length - 1 || !char.IsWhiteSpace(unprocessedText[index + 1]);
+        }
+
+        private string GetWordForTag(string mdSymbol, int index, string unprocessedText, bool isOpenTag)
+        {
+            int start = index;
+            while (start > 0 && !char.IsWhiteSpace(unprocessedText[start - 1]))
+            {
+                start--;
+            }
+
+            int end = index;
+            while (end < unprocessedText.Length && !char.IsWhiteSpace(unprocessedText[end]))
+            {
+                end++;
+            }
+
+            return unprocessedText.Substring(start, end - start);
+        }
+
+        private string GetWordBetweenTags(string mdSymbol, int end, string unprocessedText)
+        {
+            bool isFirstTag = !(_tagPositionsStack.TryPeek(out var previousTagPosition));
+
+            if (isFirstTag)
+            {
+                return string.Empty;
+            }
+
+            int start = previousTagPosition.StartIndex;
+
+            while (start > 0 && !char.IsWhiteSpace(unprocessedText[start - 1]))
+            {
+                start--;
+            }
+
+            while (end < unprocessedText.Length && !char.IsWhiteSpace(unprocessedText[end]))
+            {
+                end++;
+            }
+
+            Console.WriteLine($"слово между символами: {unprocessedText.Substring(start, end - start)}");
+
+            return unprocessedText.Substring(start, end - start);
+        }
+
         private bool CheckForEmptyRaw(string mdSymbol, int index)
         {
             bool isFirstTag = !(_tagPositionsStack.TryPeek(out var previousTagPosition));
@@ -116,12 +252,12 @@ namespace MarkdownRenderer
                 int offset = CountOffset(mdSymbol);
                 int previousTagIndex = previousTagPosition.StartIndex;
 
-                char charBefore = previousTagIndex > 0 
-                    ? unprocessedText[previousTagIndex - 1] 
-                    : ' '; 
+                char charBefore = previousTagIndex > 0
+                    ? unprocessedText[previousTagIndex - 1]
+                    : ' ';
 
-                char charAfter = index + offset < unprocessedText.Length - 1 
-                    ? unprocessedText[index + offset + 1] 
+                char charAfter = index + offset < unprocessedText.Length - 1
+                    ? unprocessedText[index + offset + 1]
                     : ' ';
 
                 bool isTagAtWordStart = char.IsWhiteSpace(charBefore);
@@ -137,7 +273,12 @@ namespace MarkdownRenderer
         {
             bool isFirstTag = !(_tagPositionsStack.TryPeek(out var previousTagPosition));
 
-            if (!isFirstTag && mdSymbol == previousTagPosition.Tag.MarkdownSymbol)
+            if (isFirstTag)
+            {
+                return true;
+            }
+
+            if (mdSymbol == previousTagPosition.Tag.MarkdownSymbol)
             {
                 var subString = unprocessedText.Substring(previousTagPosition.StartIndex + 1, index - previousTagPosition.StartIndex - 1);
 
@@ -149,7 +290,7 @@ namespace MarkdownRenderer
                 return true;
             }
 
-            return true;
+            return false;
         }
 
         private bool CheckForSpacesBefore(string mdSymbol, int index, string unprocessedText)
@@ -236,7 +377,7 @@ namespace MarkdownRenderer
                 return "\\_";
 
             if (unprocessedText[index].ToString() == "\\" && index < unprocessedText.Length - 2
-                                                          && unprocessedText[index + 1] == '_' 
+                                                          && unprocessedText[index + 1] == '_'
                                                           && unprocessedText[index + 2] == '_')
                 return "\\__";
 
