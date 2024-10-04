@@ -3,8 +3,8 @@
 public enum TokenType
 {
     Text,
-    Bold, 
     Italics,
+    Bold, 
     Header,
     LineBreak, // Перенос на новую строку
 }

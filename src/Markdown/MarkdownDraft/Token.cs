@@ -29,6 +29,9 @@ public struct Token : IEquatable<Token>
     // по основному списку, и на каждой итерации проверять, нет ли у текущего токена
     // вложенных токенов
     public List<Token> InsideTokens { get; set; }
+    
+    public bool IsPairedTag { get; set; }
+    public int TagLength { get; set; }
 
     public bool Equals(Token other)
     {
