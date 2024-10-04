@@ -13,6 +13,7 @@ namespace MarkdownRender
         /// </summary>
         /// <param name="htmlString"></param>
         /// <returns></returns>
-        public string ConvertToHtml(string htmlString, Dictionary<string, Tag>? Tags);
+        public string MarkdownRender(string markdownString);
+        public string ConvertToHtml(StringBuilder markdownString, List<Tag> tags);
     }
 }

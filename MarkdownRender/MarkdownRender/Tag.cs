@@ -10,7 +10,8 @@ namespace MarkdownRender
 {
     public class Tag
     {
-        public bool DoubleTagHtml {  get; set; }
+        public int IndexStart {  get; set; }
+        public int IndexEnd { get; set; }
         public string? HtmlTag { get; set; }
         public string? MarkdownTag { get; set; }
         /// <summary>
