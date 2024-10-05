@@ -6,5 +6,6 @@ public enum TokenType
     Italics,
     Bold, 
     Header,
-    LineBreak, // Перенос на новую строку
+    Main, // Вне какого-либо тега
+    // LineBreak, // Перенос на новую строку
 }

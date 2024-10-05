@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace MarkdownDraft;
 
@@ -14,15 +15,29 @@ class Program
         // 
         // TODO: Также надо предусмотреть, что я же не просто так указал в структуре
         // SpecialSymbol свойство Length, а 
+        //
+        // TODO: Когда дойдем до рендера, убирать специальные символы (например "__") будем
+        // ориентуруясь на то, парный ли тег (IsPairedTag) и какова длина специального символа (TagLength)
         string str1 = "__dadawdaw _wdwadawd_ wdadawdawdawd__";
         string str2 = "_dadawdaw __wdwadawd__ wdadawdawdawd_";
         string str3 = "#__dadawdaw _wdwadawd_ wdadawdawdawd__";
-        string str4 = "__dadawdaw _wdwadawd_ wdadawdawdawd__";
-        string str5 = "__dadawdaw _wdwadawd_ wdadawdawdawd__";
-        string str6 = "__dadawdaw _wdwadawd_ wdadawdawdawd__";
+        string str4 = "__text_text___";
+        string str5 = "_italic_";
+        string str6 = "__bold__";
+        string str7 = "This is _italic_ text.";
+        string str8 = "__bold _italic_ text__";
+        string str9 = "__bold text_ with _italic_ text__";
+        string str10 = "This is _italic text";
+        string str11 = "";
+        string str12 = "# Заголовок первого уровня\n\nЭто пример текста, который будет использоваться для тестирования парсера Markdown. Здесь мы можем использовать __жирный текст__, чтобы выделить важные слова, и _курсив_, чтобы сделать акцент на других аспектах.\n\n## Заголовок второго уровня\n\nВ этом разделе мы будем обсуждать различные аспекты парсинга. Например, мы можем смешивать __жирный__ и _курсивный_ текст, чтобы увидеть, как парсер справляется с разными форматами.\n\n### Заголовок третьего уровня\n\n1. Первый элемент списка\n2. Второй элемент списка с _курсивом_\n3. Третий элемент списка с __жирным текстом__ и _курсивом_\n\nТеперь давайте посмотрим на более сложные примеры:\n\nЭто текст с __жирным__ и _курсивом_, а также # заголовком. Следующий параграф будет содержать даже больше форматов.\n\n__Важно:__ __жирный текст__ должен быть правильно обработан, а _курсив_ не должен конфликтовать с __жирным__.\n\nЕсли вы прочитали этот текст, вы можете заметить, что # заголовок не должен быть затенен другим текстом. Например, __жирный текст__, который находится _между курсивом_ и заголовком.\n\n# Заключение\n\nМы надеемся, что этот текст помог вам протестировать ваш парсер. Убедитесь, что все форматы правильно обрабатываются. Если __жирный текст__ стоит в конце строки, а _курсив_ в начале, это не должно вызывать ошибок. # Заголовок должен оставаться отдельным и не смешиваться с другими форматами.\n\nТаким образом, тестируя производительность вашего метода, вы можете увидеть, как он справляется с обработкой длинного текста. Не забудьте протестировать его на различных вводных данных!";
 
-        var result = Parse(str3);
-        Console.WriteLine(str3.Length);
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        var result = Parse(str12);
+        var res = stopwatch.Elapsed;
+        stopwatch.Stop();
+        Console.WriteLine(res);
+        Console.WriteLine(str12.Length);
         foreach (var VARIABLE in result)
         {
             Console.WriteLine($"{VARIABLE.Type}: {VARIABLE.StartIndex} - {VARIABLE.EndIndex}");
@@ -150,7 +165,8 @@ class Program
             }
         }
 
-
+        RemoveInvalidTokens(tokens);
+        
         return tokens;
     }
     
@@ -192,5 +208,72 @@ class Program
         }
 
         return resultToReturn;
+    }
+
+    // В этом методе удалим токены, которые не могут рендериться в текущем токене
+    // Пример: _text__text__text_ => <em>text__text__text</em>
+    // По сути самый длинный рекусривный вызов здесь может быть длиной в 3, 
+    // тк иначе даже если будет __a __текст, который может еще суб-токену содержать__ a__,
+    // то такой суб-массив просто удалиться, и не будет обрабатываться
+    // NOTE: По сути здесь никогда не может быть nullRefEx,
+    // тк как любому токену присуждается минимум пустой список
+    // САМОЕ ГЛАВНОЕ - ВЫЗЫВАТЬ ЭТОТ МЕТОД ПЕРЕД FillTokensListsWithTextTokens
+    private static void RemoveInvalidTokens(List<Token> tokens, TokenType currentTokenType = TokenType.Main)
+    {
+        for (int i = tokens.Count - 1; i >= 0; i--)
+        {
+            var token = tokens[i];
+        
+            if (token.Type >= currentTokenType)
+            {
+                tokens.RemoveAt(i); // Удаляем токен по индексу
+            }
+            else
+            {
+                // Рекурсивный вызов для вложенных токенов
+                RemoveInvalidTokens(token.InsideTokens, token.Type);
+            }
+        }
+    }
+
+    // В этом месте заполним пустые символы, не занятые никакими токенами токенами текста
+    // Пример: __text_text___ = Bold { Text, Italics },
+    // потому что без него будет: Bold { Italics }
+    private static void FillTokensListsWithTextTokens(Token token)
+    {
+        // __w_text_w__
+        int textStartIndex = token.StartIndex + token.TagLength;
+        
+        for (int i = 0; i < token.InsideTokens.Count; i++)
+        {
+            var insideToken = token.InsideTokens[i];
+            
+            if (token.StartIndex > textStartIndex)
+            {
+                token.InsideTokens.Insert(i, new Token()
+                {
+                    StartIndex = textStartIndex,
+                    EndIndex = insideToken.StartIndex - 1,
+                    Type = TokenType.Text,
+                    IsPairedTag = false,
+                    TagLength = 0,
+                });
+            }
+
+            textStartIndex = insideToken.EndIndex + 1;
+        }
+        
+        // Обработка расстояния между последним токеном внутри и правой границей
+        if (token.EndIndex - token.TagLength + 1 > textStartIndex)
+        {
+            token.InsideTokens.Add(new Token()
+            {
+                StartIndex = textStartIndex,
+                EndIndex = token.EndIndex - token.TagLength,
+                Type = TokenType.Text,
+                IsPairedTag = false,
+                TagLength = 0,
+            });
+        }
     }
 }
