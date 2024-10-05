@@ -1,5 +1,7 @@
 ﻿namespace MarkdownDraft;
 
+// Иерархия важна, ведь благодаря ей мы ориентуремся в правах тегов, например, ранг у Bold выше, 
+// чем у Italics, поэтому Bold внутри Italics работать не будет
 public enum TokenType
 {
     Text,
@@ -7,5 +9,4 @@ public enum TokenType
     Bold, 
     Header,
     Main, // Вне какого-либо тега
-    // LineBreak, // Перенос на новую строку
 }
