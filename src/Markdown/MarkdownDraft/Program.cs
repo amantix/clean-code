@@ -31,28 +31,29 @@ class Program
         string str11 = "#dwadadawd";
         string str12 = "# Заголовок первого уровня\n\nЭто пример текста, который будет использоваться для тестирования парсера Markdown. Здесь мы можем использовать __жирный текст__, чтобы выделить важные слова, и _курсив_, чтобы сделать акцент на других аспектах.\n\n## Заголовок второго уровня\n\nВ этом разделе мы будем обсуждать различные аспекты парсинга. Например, мы можем смешивать __жирный__ и _курсивный_ текст, чтобы увидеть, как парсер справляется с разными форматами.\n\n### Заголовок третьего уровня\n\n1. Первый элемент списка\n2. Второй элемент списка с _курсивом_\n3. Третий элемент списка с __жирным текстом__ и _курсивом_\n\nТеперь давайте посмотрим на более сложные примеры:\n\nЭто текст с __жирным__ и _курсивом_, а также # заголовком. Следующий параграф будет содержать даже больше форматов.\n\n__Важно:__ __жирный текст__ должен быть правильно обработан, а _курсив_ не должен конфликтовать с __жирным__.\n\nЕсли вы прочитали этот текст, вы можете заметить, что # заголовок не должен быть затенен другим текстом. Например, __жирный текст__, который находится _между курсивом_ и заголовком.\n\n# Заключение\n\nМы надеемся, что этот текст помог вам протестировать ваш парсер. Убедитесь, что все форматы правильно обрабатываются. Если __жирный текст__ стоит в конце строки, а _курсив_ в начале, это не должно вызывать ошибок. # Заголовок должен оставаться отдельным и не смешиваться с другими форматами.\n\nТаким образом, тестируя производительность вашего метода, вы можете увидеть, как он справляется с обработкой длинного текста. Не забудьте протестировать его на различных вводных данных!";
         string str13 = " __text__  _wdada_ ";
-        string str14 =
-            "# Заголовок первого уровня\n\nЭто пример длинного текста для тестирования парсера Markdown. В этом тексте мы используем _курсив_ и __жирный текст__ для проверки, как работает обработка таких тегов.\n\nТестирование парсера важно для того, чтобы убедиться, что все теги правильно интерпретируются. Например, _курсивный текст_ помогает выделять слова в предложениях, а __жирный текст__ используется для акцентирования на важных фразах.\n\n# Вложенные элементы\n\nКроме этого, необходимо проверять, как работает парсер с _вложенными_ тегами. Например, вот так: __жирный _и курсив_ в одном предложении__.\n\nТакже стоит протестировать парсер на больших объемах текста, чтобы убедиться, что __он не замедляется__ при обработке длинных строк. Оптимизация работы парсера очень важна, так как это напрямую влияет на производительность программы.\n\n# Тестирование производительности\n\nВот пример длинного текста с большим количеством тегов для проверки производительности:\n\n__Это жирный текст__, а вот _курсивный текст_, который используется для различных тестов. Продолжаем добавлять больше текста, чтобы создать нагрузку на парсер. Проверяем, как _курсив_ и __жирный__ текст взаимодействуют друг с другом.\n\nТеперь давайте добавим еще больше текста, чтобы убедиться, что парсер справляется с обработкой длинных строк. Мы будем добавлять теги _курсива_ и __жирного текста__, чтобы увидеть, как они работают вместе.\n\n__Жирный текст__ должен обрабатываться правильно, как и _курсивный текст_. Это важно, потому что парсер должен работать с множеством символов и тегов одновременно. Важно убедиться, что программа не начинает __замедляться__ или _падать_ на больших данных.\n\n# Заключение\n\nПарсеры Markdown используются в самых разных проектах, от генерации веб-страниц до редактирования текстов в блогах. Тестирование парсера на различных входных данных позволяет убедиться в его стабильности и производительности. __Жирный текст__ и _курсивный текст_ помогают создавать более выразительный контент, и важно, чтобы парсер корректно обрабатывал эти элементы.";
-
+        string str14 = "# Заголовок первого уровня\n\nЭто пример длинного текста для тестирования парсера Markdown. В этом тексте мы используем _курсив_ и __жирный текст__ для проверки, как работает обработка таких тегов.\n\nТестирование парсера важно для того, чтобы убедиться, что все теги правильно интерпретируются. Например, _курсивный текст_ помогает выделять слова в предложениях, а __жирный текст__ используется для акцентирования на важных фразах.\n\n# Вложенные элементы\n\nКроме этого, необходимо проверять, как работает парсер с _вложенными_ тегами. Например, вот так: __жирный _и курсив_ в одном предложении__.\n\nТакже стоит протестировать парсер на больших объемах текста, чтобы убедиться, что __он не замедляется__ при обработке длинных строк. Оптимизация работы парсера очень важна, так как это напрямую влияет на производительность программы.\n\n# Тестирование производительности\n\nВот пример длинного текста с большим количеством тегов для проверки производительности:\n\n__Это жирный текст__, а вот _курсивный текст_, который используется для различных тестов. Продолжаем добавлять больше текста, чтобы создать нагрузку на парсер. Проверяем, как _курсив_ и __жирный__ текст взаимодействуют друг с другом.\n\nТеперь давайте добавим еще больше текста, чтобы убедиться, что парсер справляется с обработкой длинных строк. Мы будем добавлять теги _курсива_ и __жирного текста__, чтобы увидеть, как они работают вместе.\n\n__Жирный текст__ должен обрабатываться правильно, как и _курсивный текст_. Это важно, потому что парсер должен работать с множеством символов и тегов одновременно. Важно убедиться, что программа не начинает __замедляться__ или _падать_ на больших данных.\n\n# Заключение\n\nПарсеры Markdown используются в самых разных проектах, от генерации веб-страниц до редактирования текстов в блогах. Тестирование парсера на различных входных данных позволяет убедиться в его стабильности и производительности. __Жирный текст__ и _курсивный текст_ помогают создавать более выразительный контент, и важно, чтобы парсер корректно обрабатывал эти элементы.";
         string str15 =
-            "___adadwa_ _wdada_ __";
-        
+            "# Header";
         
         
         var stopwatch = new Stopwatch();
         stopwatch.Start();
 
         
-        var result = Parse(str15);
-        var rendered = Render(result, str15);
+        var result = Parse(str14);
+        var rendered = Render(result, str14);
         Console.WriteLine(rendered);
         
 
         stopwatch.Stop();
         var res = stopwatch.Elapsed;
-        Console.WriteLine(res);
-        Console.WriteLine(str15.Length);
         
+        
+        Console.WriteLine(res);
+        Console.WriteLine(str14.Length);
+        
+        Thread.Sleep(10000);
+        return;
         foreach (var VARIABLE in result)
         {
             Console.WriteLine($"{VARIABLE.Type}: {VARIABLE.StartIndex} - {VARIABLE.EndIndex}");
@@ -122,7 +123,7 @@ class Program
                 var ch = str[i];
                 if (str[i] == '\n')
                 {
-                    listOfSpecialSymbols.Add(new SpecialSymbol { Type = TokenType.Header, Index = i, TagLength = 1, IsPairedTag = false, IsClosingTag = true});
+                    listOfSpecialSymbols.Add(new SpecialSymbol { Type = TokenType.Header, Index = i - 1, TagLength = 1, IsPairedTag = false, IsClosingTag = true});
                     isOpenedHeader = false;
                     continue;
                 }
@@ -134,10 +135,10 @@ class Program
                 }*/
             }
 
-            if (isBoldOpened && i < str.Length - 3 && str.Substring(i, 2) == "___")
+            /*if (isBoldOpened && i < str.Length - 3 && str.Substring(i, 2) == "___")
             {
                 
-            }
+            }*/
             
             if (i < str.Length - 1 && str.Substring(i, 2) == "__")
             {
@@ -293,6 +294,28 @@ class Program
         
         return mainToken.InsideTokens;
     }
+    
+    bool IsEscaped(string str, int index)
+    {
+        // Проверяем, есть ли перед текущим символом экранирующий символ
+        if (index > 0 && str[index - 1] == '\\')
+        {
+            // Если символ экранирован, проверяем, является ли этот экранирующий символ
+            // также экранированным (например, двойной слэш \\).
+            int backslashCount = 0;
+            index--;  // Начинаем проверять символы до текущего
+            while (index >= 0 && str[index] == '\\')
+            {
+                backslashCount++;
+                index--;
+            }
+
+            // Если количество экранирующих слэшей нечетное, значит символ экранирован
+            return backslashCount % 2 == 1;
+        }
+
+        return false;
+    }
 
     private static bool IsWithinOneWord(string src, SpecialSymbol openingTag, SpecialSymbol closingTag)
     {
@@ -411,10 +434,12 @@ class Program
         // Обработка расстояния между последним токеном внутри и правой границей
         if (token.EndIndex - ((token.IsPairedTag) ? token.TagLength : 0) >= textStartIndex)
         {
+            int endIndex = token.EndIndex - ((token.IsPairedTag) ? token.TagLength : 0);
+
             token.InsideTokens.Add(new Token()
             {
-                StartIndex = textStartIndex,
-                EndIndex = token.EndIndex - ((token.IsPairedTag) ? token.TagLength : 0),
+                StartIndex = textStartIndex + (token.Type == TokenType.Header && textStartIndex < endIndex ? 1: 0),
+                EndIndex = endIndex,
                 Type = TokenType.Text,
                 IsPairedTag = false,
                 TagLength = 0,
@@ -429,45 +454,35 @@ class Program
 
         foreach (var token in tokens)
         {
-            // Добавляем текст, который находится между предыдущим токеном и текущим
-            if (currentIndex < token.StartIndex)
-            {
-                sb.Append(input.Substring(currentIndex, token.StartIndex - currentIndex));
-            }
-
-            // Рендерим текущий токен с учетом вложенных токенов
             sb.Append(RenderToken(token, input));
-
-            // Обновляем текущий индекс
-            currentIndex = token.EndIndex + 1;
         }
-
-        // Добавляем оставшийся текст после последнего токена
-        if (currentIndex < input.Length)
-        {
-            sb.Append(input.Substring(currentIndex));
-        }
-
+        
         return sb.ToString();
     }
 
     private static string RenderToken(Token token, string input)
     {
         var sb = new StringBuilder();
-
-        // Извлекаем подстроку для текущего токена
-        string content = input.Substring(token.StartIndex, token.EndIndex - token.StartIndex + 1);
+     
+        int length = token.EndIndex - token.StartIndex - token.TagLength * (token.IsPairedTag ? 2 : 1) + 1;
+        
+        string content = input.Substring(token.StartIndex + token.TagLength, length);
 
         switch (token.Type)
         {
+            case TokenType.Header:
+                sb.Append("<h1>");
+                sb.Append(RenderInsideTokens(token, input)); 
+                sb.Append("</h1>");
+                break;
             case TokenType.Bold:
                 sb.Append("<strong>");
-                sb.Append(RenderInsideTokens(token, input));  // Рекурсивно рендерим вложенные токены
+                sb.Append(RenderInsideTokens(token, input)); 
                 sb.Append("</strong>");
                 break;
             case TokenType.Italics:
                 sb.Append("<em>");
-                sb.Append(RenderInsideTokens(token, input));  // Рекурсивно рендерим вложенные токены
+                sb.Append(RenderInsideTokens(token, input));
                 sb.Append("</em>");
                 break;
             case TokenType.Text:
@@ -481,26 +496,10 @@ class Program
     private static string RenderInsideTokens(Token token, string input)
     {
         var sb = new StringBuilder();
-        int currentIndex = token.StartIndex;
 
         foreach (var innerToken in token.InsideTokens)
         {
-            // Добавляем текст между вложенными токенами
-            if (currentIndex < innerToken.StartIndex)
-            {
-                sb.Append(input.Substring(currentIndex, innerToken.StartIndex - currentIndex));
-            }
-
-            // Рекурсивный вызов для вложенного токена
             sb.Append(RenderToken(innerToken, input));
-
-            currentIndex = innerToken.EndIndex + 1;
-        }
-
-        // Добавляем текст после последнего вложенного токена
-        if (currentIndex < token.EndIndex)
-        {
-            sb.Append(input.Substring(currentIndex, token.EndIndex - currentIndex + 1));
         }
 
         return sb.ToString();
