@@ -40,24 +40,45 @@ namespace MarkdownRenderer
             {
                 // TODO: Добавить проверку на наличие цифр в слове
 
-                char currentChar = word[i];
+                var tagType = HandleMarkdownSymbol(word, i);
 
-                // TODO: Добавить распознование __
-                if (currentChar == '_')
+                if (tagType is TagType.NotTag)
+                    continue;
+
+                var tagState = DetermineTagState(word, tagType, i);
+
+                if (tagState is TagState.NotTag)
+                    continue;
+
+                bool isPossibleToAddTag = HandleTagStack(tagType, tagState, i);
+
+                if (isPossibleToAddTag)
                 {
-                    var tagType = TagType.ItalicTag;
-                    var tagState = DetermineTagState(word, tagType, i);
+                    currentToken.TagPositions.Add(_tagPositionsStack.Peek());
+                }
 
-                    bool res = HandleTagStack(tagType, tagState, i);
-
-                    if (res)
-                    {
-                        currentToken.TagPositions.Add(_tagPositionsStack.Peek());
-                    }
+                if (tagType is TagType.BoldTag)
+                {
+                    i++;
                 }
             }
 
             return currentToken;
+        }
+
+        private TagType HandleMarkdownSymbol(string word, int index)
+        {
+            if (word[index] == '_')
+            {
+                if (index < word.Length - 1 && word[index + 1] == '_')
+                {   
+                    return TagType.BoldTag;
+                }
+
+                return TagType.ItalicTag;
+            }
+
+            return TagType.NotTag;
         }
 
         private bool HandleTagStack(TagType tagType, TagState tagState, int tagIndex)
@@ -90,7 +111,17 @@ namespace MarkdownRenderer
 
                 while (tempStack.Count > 0)
                 {
-                    _tagPositionsStack.Push(tempStack.Pop());
+                    var tempTagPosition = tempStack.Pop();
+
+                    if (tagType == TagType.ItalicTag 
+                        && tempTagPosition.TagType == TagType.BoldTag
+                        && tempTagPosition.TagState == TagState.Close)
+                    {
+                        tempTagPosition.TagPair.TagState = TagState.NotTag;
+                        tempTagPosition.TagState = TagState.NotTag;
+                    }
+
+                    _tagPositionsStack.Push(tempTagPosition);
                 }
 
                 if (matchingOpenTag is null)
@@ -100,6 +131,10 @@ namespace MarkdownRenderer
 
                 matchingOpenTag.TagState = TagState.Open;
                 var tagPosition = new TagPosition(tagType, TagState.Close, tagIndex);
+
+                tagPosition.TagPair = matchingOpenTag;
+                matchingOpenTag.TagPair = tagPosition;
+
                 _tagPositionsStack.Push(tagPosition);
 
                 return true;

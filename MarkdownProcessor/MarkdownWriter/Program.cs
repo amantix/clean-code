@@ -22,17 +22,16 @@ class Program
         };
 
         var tokensParser = new TokensParser(tagsDictionary);
-        string text = @"_ле _ежжи_";
+        string text = @"_ле __ежжи__ лее_";
         string[] tokens = text.Split(' ');
 
         foreach (var item in tokens)
         {
             Console.WriteLine(item);
         }
-        // в токене есть слова
-        var allTokens = tokensParser.ParseTokens(text);
-
         Console.WriteLine("\n");
+
+        var allTokens = tokensParser.ParseTokens(text);
         foreach (var token in allTokens)
         {
             Console.WriteLine($"СЛОВО - {token.Content}");
