@@ -6,13 +6,13 @@ namespace MarkdownRenderer
     public class TagPosition
     {
         public TagType TagType { get; set; }
-        public bool IsOpened { get; set; }
+        public TagState TagState { get; set; }
         public int TagIndex { get; set; }
 
-        public TagPosition(TagType tag, bool isOpened, int tagIndex)
+        public TagPosition(TagType tag, TagState tagState, int tagIndex)
         {
             TagType = tag;
-            IsOpened = isOpened;
+            TagState = tagState;
             TagIndex = tagIndex;
         }
     }

@@ -22,7 +22,7 @@ class Program
         };
 
         var tokensParser = new TokensParser(tagsDictionary);
-        string text = @"_ле ежжи_";
+        string text = @"_ле _ежжи_";
         string[] tokens = text.Split(' ');
 
         foreach (var item in tokens)
@@ -32,12 +32,15 @@ class Program
         // в токене есть слова
         var allTokens = tokensParser.ParseTokens(text);
 
+        Console.WriteLine("\n");
         foreach (var token in allTokens)
         {
             Console.WriteLine($"СЛОВО - {token.Content}");
             foreach (var item in token.TagPositions)
             {
-                Console.WriteLine($"индекс найденного тега {item.TagType.ToString()} - {item.TagIndex}");
+                Console.WriteLine($"Type: {item.TagType.ToString()}, " +
+                                  $"Index: {item.TagIndex}, " +
+                                  $"Sate: {item.TagState}," );
             }
         }
     }

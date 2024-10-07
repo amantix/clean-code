@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
+using System.Xml;
 using MarkdownRenderer.Abstractions;
 using MarkdownRenderer.Enums;
 using MarkdownRenderer.Interfaces;
@@ -34,31 +36,96 @@ namespace MarkdownRenderer
         private Token ProcessWord(string word)
         {
             var currentToken = new Token(word);
-
             for (int i = 0; i < word.Length; i++)
             {
+                // TODO: Добавить проверку на наличие цифр в слове
+
                 char currentChar = word[i];
 
+                // TODO: Добавить распознование __
                 if (currentChar == '_')
                 {
-                    if (_tagPositionsStack.TryPeek(out var previousTag))
+                    var tagType = TagType.ItalicTag;
+                    var tagState = DetermineTagState(word, tagType, i);
+
+                    bool res = HandleTagStack(tagType, tagState, i);
+
+                    if (res)
                     {
-                        if (previousTag.IsOpened)
-                        {
-                            var tagPos = new TagPosition(TagType.ItalicTag, false, i);
-                            currentToken.TagPositions.Add(tagPos);
-                        }
-                    }
-                    else
-                    {
-                        var tagPos = new TagPosition(TagType.ItalicTag, true, i);
-                        _tagPositionsStack.Push(tagPos);
-                        currentToken.TagPositions.Add(tagPos);
+                        currentToken.TagPositions.Add(_tagPositionsStack.Peek());
                     }
                 }
             }
 
             return currentToken;
+        }
+
+        private bool HandleTagStack(TagType tagType, TagState tagState, int tagIndex)
+        {
+            if (tagState == TagState.TemporarilyOpen)
+            {
+                var tagPosition = new TagPosition(tagType, tagState, tagIndex);
+                _tagPositionsStack.Push(tagPosition);
+
+                return true;
+            }
+
+            if (tagState == TagState.TemporarilyClose)
+            {
+                TagPosition matchingOpenTag = null;
+                Stack<TagPosition> tempStack = new Stack<TagPosition>();
+
+                while (_tagPositionsStack.Count > 0)
+                {
+                    var previousTagPosition = _tagPositionsStack.Pop();
+
+                    if (previousTagPosition.TagType == tagType && previousTagPosition.TagState == TagState.TemporarilyOpen)
+                    {
+                        matchingOpenTag = previousTagPosition;
+                        break;
+                    }
+
+                    tempStack.Push(previousTagPosition);
+                }
+
+                while (tempStack.Count > 0)
+                {
+                    _tagPositionsStack.Push(tempStack.Pop());
+                }
+
+                if (matchingOpenTag is null)
+                {
+                    return false;
+                }
+
+                matchingOpenTag.TagState = TagState.Open;
+                var tagPosition = new TagPosition(tagType, TagState.Close, tagIndex);
+                _tagPositionsStack.Push(tagPosition);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private TagState DetermineTagState(string word, TagType tagType, int symbolIndex)
+        {
+            if (symbolIndex == 0)
+            {
+                return TagState.TemporarilyOpen;
+            }
+
+            if (tagType == TagType.ItalicTag && symbolIndex == word.Length - 1)
+            {
+                return TagState.TemporarilyClose;
+            }
+
+            if (tagType == TagType.BoldTag && symbolIndex == word.Length - 2)
+            {
+                return TagState.TemporarilyClose;
+            }
+
+            return TagState.NotTag;
         }
     }
 }
