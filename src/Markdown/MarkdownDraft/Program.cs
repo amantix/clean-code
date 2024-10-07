@@ -35,18 +35,23 @@ class Program
             "# Заголовок первого уровня\n\nЭто пример длинного текста для тестирования парсера Markdown. В этом тексте мы используем _курсив_ и __жирный текст__ для проверки, как работает обработка таких тегов.\n\nТестирование парсера важно для того, чтобы убедиться, что все теги правильно интерпретируются. Например, _курсивный текст_ помогает выделять слова в предложениях, а __жирный текст__ используется для акцентирования на важных фразах.\n\n# Вложенные элементы\n\nКроме этого, необходимо проверять, как работает парсер с _вложенными_ тегами. Например, вот так: __жирный _и курсив_ в одном предложении__.\n\nТакже стоит протестировать парсер на больших объемах текста, чтобы убедиться, что __он не замедляется__ при обработке длинных строк. Оптимизация работы парсера очень важна, так как это напрямую влияет на производительность программы.\n\n# Тестирование производительности\n\nВот пример длинного текста с большим количеством тегов для проверки производительности:\n\n__Это жирный текст__, а вот _курсивный текст_, который используется для различных тестов. Продолжаем добавлять больше текста, чтобы создать нагрузку на парсер. Проверяем, как _курсив_ и __жирный__ текст взаимодействуют друг с другом.\n\nТеперь давайте добавим еще больше текста, чтобы убедиться, что парсер справляется с обработкой длинных строк. Мы будем добавлять теги _курсива_ и __жирного текста__, чтобы увидеть, как они работают вместе.\n\n__Жирный текст__ должен обрабатываться правильно, как и _курсивный текст_. Это важно, потому что парсер должен работать с множеством символов и тегов одновременно. Важно убедиться, что программа не начинает __замедляться__ или _падать_ на больших данных.\n\n# Заключение\n\nПарсеры Markdown используются в самых разных проектах, от генерации веб-страниц до редактирования текстов в блогах. Тестирование парсера на различных входных данных позволяет убедиться в его стабильности и производительности. __Жирный текст__ и _курсивный текст_ помогают создавать более выразительный контент, и важно, чтобы парсер корректно обрабатывал эти элементы.";
 
         string str15 =
-            "__awdwa_dwdada__wddwa_";
+            "___adadwa_ _wdada_ __";
+        
+        
         
         var stopwatch = new Stopwatch();
         stopwatch.Start();
 
         
         var result = Parse(str15);
+        var rendered = Render(result, str15);
+        Console.WriteLine(rendered);
         
 
         stopwatch.Stop();
         var res = stopwatch.Elapsed;
         Console.WriteLine(res);
+        Console.WriteLine(str15.Length);
         
         foreach (var VARIABLE in result)
         {
@@ -70,13 +75,13 @@ class Program
 
             Console.WriteLine("=================================================");
         }
-        Thread.Sleep(10000);
+        //Thread.Sleep(10000);
     }
     
     public static List<Token> Parse(string str)
     {
         var listOfSpecialSymbols = new List<SpecialSymbol>();
-        Stack<SpecialSymbol> openSymbolsStack = new Stack<SpecialSymbol>();
+        var openSymbolsStack = new List<SpecialSymbol>();
         var mainToken = new Token()
         {
             Type = TokenType.Main,
@@ -87,12 +92,14 @@ class Program
             InsideTokens = new List<Token>()
         }; 
         bool isOpenedHeader = false;
+        bool isBoldOpened = false;
 
         for (int i = 0; i < str.Length; i++)
         {
-            if (i < str.Length &&  str[i] == '#')
+            if (str[i] == '#') // Пробел после решетки обязателен,
+            // чтобы header сработал
             {
-                listOfSpecialSymbols.Add(new SpecialSymbol { Type = TokenType.Header, Index = i, TagLength = 1, IsPairedTag = false});
+                listOfSpecialSymbols.Add(new SpecialSymbol { Type = TokenType.Header, Index = i, TagLength = 1, IsPairedTag = false, IsClosingTag = false});
                 isOpenedHeader = true;
                 ++i;
             }
@@ -109,23 +116,29 @@ class Program
             // переноса на новую строку (aka закрывающего тега) не было
             // Поэтому теперь закр. тегом будет считать символ до переноса на новую строку
             // и конец строки, если header был открыт
+            // Проверка индекс нужно, стоб понять, где-то выше при инкрементировании не улетели ли мы за пределы
             if (i < str.Length && (str[i] == '\n' || i == str.Length - 1) && isOpenedHeader)
             {
                 var ch = str[i];
                 if (str[i] == '\n')
                 {
-                    listOfSpecialSymbols.Add(new SpecialSymbol { Type = TokenType.Header, Index = i, TagLength = 0, IsPairedTag = false });
+                    listOfSpecialSymbols.Add(new SpecialSymbol { Type = TokenType.Header, Index = i, TagLength = 1, IsPairedTag = false, IsClosingTag = true});
                     isOpenedHeader = false;
                     continue;
                 }
                 
-                if (i == str.Length - 1)
+                /*if (i == str.Length - 1)
                 {
-                    listOfSpecialSymbols.Add(new SpecialSymbol { Type = TokenType.Header, Index = i, TagLength = 1, IsPairedTag = false });
+                    listOfSpecialSymbols.Add(new SpecialSymbol { Type = TokenType.Header, Index = i, TagLength = 1, IsPairedTag = false, IsClosingTag = true });
                     isOpenedHeader = false;
-                }
+                }*/
             }
 
+            if (isBoldOpened && i < str.Length - 3 && str.Substring(i, 2) == "___")
+            {
+                
+            }
+            
             if (i < str.Length - 1 && str.Substring(i, 2) == "__")
             {
                 listOfSpecialSymbols.Add(new SpecialSymbol { Type = TokenType.Bold, Index = i, TagLength = 2, IsPairedTag = true });
@@ -139,9 +152,12 @@ class Program
             }
 
             // Надо будет по красивее сделать, а то повторение кода
+            // Этот if предусматривает случай, когда header был открыт,
+            // но последним символом в исходной строке был какой-то специальный символ
+            // и надо бы header закрыть, чтобы превратить его в токен
             if (i >= str.Length - 1 && isOpenedHeader)
             {
-                listOfSpecialSymbols.Add(new SpecialSymbol { Type = TokenType.Header, Index = str.Length - 1, TagLength = 1, IsPairedTag = false });
+                listOfSpecialSymbols.Add(new SpecialSymbol { Type = TokenType.Header, Index = str.Length - 1, TagLength = 1, IsPairedTag = false, IsClosingTag = true });
                 isOpenedHeader = false;
             }
         }
@@ -154,23 +170,103 @@ class Program
             // Если это открывающий символ
             if (IsOpeningSymbol(symbol, openSymbolsStack))
             {
-                openSymbolsStack.Push(symbol);
+                openSymbolsStack.Add(symbol);
             }
             else
             {
+                // Здесь мы пытаемся найти закрывающий символ
                 // По сути если мы попали в это ветвление, то открывающий тег точно есть
                 // по этому ищем его и удаляем вложенность в закрывающемся теге
-                // Закрывающий символ — ищем пару
-                //
-                // // ВОТ ТУТ НУЖНО ИЗМЕНИТЬ ЛОГИКУ НАХОЖДЕНИЯ ОТКРЫВАЮЩЕГОСЯ 
-                
-                // var openingSymbol = openSymbolsStack.Pop();
-                SpecialSymbol openingSymbol;
                 
                 // По сути если внутри пары тегов, с которыми мы тут работаем, если
                 // и были какие-то теги, то они уже убрались из стека
                 // по этому с чистой душой можем делать .Pop()
-                while ((openingSymbol = openSymbolsStack.Pop()).Type != symbol.Type);
+                // Но может сложиться ситуация: "__text_ text_text_"
+
+                // Пришел инициализировать здесь, а то внизу там при инициализации токена мозги делают
+                SpecialSymbol openingSymbol = new SpecialSymbol();
+                // Переменная снизу даст понять, что пара тегов не сошлась, токен создавать не надо
+                // и позволит перейти к следующей итерации, может там найдется пара корректных тегов
+                bool tagIsNeedToBeSkipped = false;
+                
+                for (int j = openSymbolsStack.Count - 1; j >= 0; j--)
+                {
+                    if (openSymbolsStack[j].Type == symbol.Type)
+                    {
+                        // Тут будет проверяться корректность потенциального токена перед его созданием
+                        // Типо пробел после header'а, его отсутствие после открывающего "_" и тд
+                        if (symbol.Type == TokenType.Italics || symbol.Type == TokenType.Bold)
+                        {
+                            // Если все условия выполнены, выходим из цикла, запоминаем 
+                            // символов надо удалить из стека, чтоб добраться до этого символ,
+                            // удаляем из стека эти символы, и готово - у нас есть правильный токен
+                            // Создаем его
+                            
+                            // openSymbolsStack[j] - открывающий
+                            // symbol - закрывающий
+                            // После открывающего и перед закрывающим нет пробела
+
+                            bool noSpareSpaces =
+                                str[openSymbolsStack[j].Index + openSymbolsStack[j].TagLength] != ' ' &&
+                                str[symbol.Index - symbol.TagLength] != ' ';
+
+                            bool distanceBetweenStartAndEndMoreThanZero =
+                                symbol.Index - openSymbolsStack[j].Index > symbol.TagLength;
+
+                            bool isWithinOneWord = IsWithinOneWord(str, openSymbolsStack[j], symbol);
+                            
+                            bool containsNumbers = str.Substring(openSymbolsStack[j].Index + openSymbolsStack[j].TagLength, 
+                                    symbol.Index - openSymbolsStack[j].Index - openSymbolsStack[j].TagLength)
+                                .All(c => char.IsDigit(c));
+                            
+                            if (noSpareSpaces && distanceBetweenStartAndEndMoreThanZero &&
+                                !containsNumbers && isWithinOneWord)
+                            {
+                                openingSymbol = openSymbolsStack[j];
+                                openSymbolsStack.RemoveAt(j);
+                                break;
+                            }
+                            else
+                            {
+                                // Теги не прошли условия
+                                // Удаляем самый первый тег, потому что может со следующим повезет
+                                // Ситуация: ["_", "_", "_"]
+                                // Тег 0 и 1 не подошли, может тогда 1 и 2 подойдут?
+                                openSymbolsStack.RemoveAt(j);
+                                openSymbolsStack.Add(symbol);
+                                tagIsNeedToBeSkipped = true;
+                                break; 
+                            }
+                            
+                        }
+                        if (symbol.Type == TokenType.Header)
+                        {
+                            bool spaceAfterSharp = (j + 1) < str.Length && str[openSymbolsStack[j].Index + 1] == ' ';
+                            bool firstTagIsOpening = openSymbolsStack[j].IsClosingTag == false;
+                            bool lastTagIsClosing = symbol.IsClosingTag;
+
+                            if (spaceAfterSharp && firstTagIsOpening && lastTagIsClosing)
+                            {
+                                openingSymbol = openSymbolsStack[j];
+                                openSymbolsStack.RemoveAt(j);
+                                break; 
+                            }
+                            else
+                            {
+                                openSymbolsStack.RemoveAt(j);
+                                openSymbolsStack.Add(symbol);
+                                tagIsNeedToBeSkipped = true;
+                                break; 
+                            }
+                        }
+                        // Удаляем все элементы на пути к открывающему тегу
+                        openSymbolsStack.RemoveAt(openSymbolsStack.Count - 1);
+                    }
+                }
+                    
+                if (tagIsNeedToBeSkipped)
+                    continue;
+
                 
                 var newToken = new Token
                 {
@@ -197,19 +293,35 @@ class Program
         
         return mainToken.InsideTokens;
     }
+
+    private static bool IsWithinOneWord(string src, SpecialSymbol openingTag, SpecialSymbol closingTag)
+    {
+        bool containsSpace = src.Substring(openingTag.Index + openingTag.TagLength,
+                closingTag.Index - openingTag.Index - openingTag.TagLength)
+            .Any(c => char.IsWhiteSpace(c));
+
+
+        return !(containsSpace &&
+               openingTag.Index - 1 >= 0 &&
+               closingTag.Index + closingTag.TagLength < src.Length &&
+               char.IsLetter(src[openingTag.Index - 1]) &&
+               char.IsLetter(src[closingTag.Index + closingTag.TagLength]));
+    }
     
-    private static bool IsOpeningSymbol(SpecialSymbol symbol, Stack<SpecialSymbol> stack)
+    private static bool IsOpeningSymbol(SpecialSymbol symbol, List<SpecialSymbol> stack)
     {
         // Определяем, открывающий ли это символ, в зависимости от контекста
         // Например, можно проверять, что нет открытой пары для символа этого типа в стеке
         bool openedTagBefore = false;
 
-        foreach (var element in stack)
+        for (int i = stack.Count - 1; i >= 0; i--)
         {
-            if (element.Type == symbol.Type)
+            if (stack[i].Type == symbol.Type)
             {
                 openedTagBefore = true;
             }
+
+            break;
         }
         
         // Проверяем, что стек может быть нулевым, до этого нигде этот открывающийся стек не встречался
@@ -246,24 +358,6 @@ class Program
     // NOTE: По сути здесь никогда не может быть nullRefEx,
     // тк как любому токену присуждается минимум пустой список
     // САМОЕ ГЛАВНОЕ - ВЫЗЫВАТЬ ЭТОТ МЕТОД ПЕРЕД FillTokensListsWithTextTokens
-    /*private static void RemoveInvalidTokens(List<Token> tokens, TokenType currentTokenType = TokenType.Main)
-    {
-        for (int i = tokens.Count - 1; i >= 0; i--)
-        {
-            var token = tokens[i];
-        
-            if (token.Type >= currentTokenType)
-            {
-                tokens.RemoveAt(i); // Удаляем токен по индексу
-            }
-            else
-            {
-                // Рекурсивный вызов для вложенных токенов
-                RemoveInvalidTokens(token.InsideTokens, token.Type);
-            }
-        }
-    }*/
-    
     private static void RemoveInvalidTokens(Token token)
     {
         for (int i = token.InsideTokens.Count - 1; i >= 0; i--)
@@ -326,5 +420,89 @@ class Program
                 TagLength = 0,
             });
         }
+    }
+
+    public static string Render(List<Token> tokens, string input)
+    {
+        var sb = new StringBuilder();
+        int currentIndex = 0;
+
+        foreach (var token in tokens)
+        {
+            // Добавляем текст, который находится между предыдущим токеном и текущим
+            if (currentIndex < token.StartIndex)
+            {
+                sb.Append(input.Substring(currentIndex, token.StartIndex - currentIndex));
+            }
+
+            // Рендерим текущий токен с учетом вложенных токенов
+            sb.Append(RenderToken(token, input));
+
+            // Обновляем текущий индекс
+            currentIndex = token.EndIndex + 1;
+        }
+
+        // Добавляем оставшийся текст после последнего токена
+        if (currentIndex < input.Length)
+        {
+            sb.Append(input.Substring(currentIndex));
+        }
+
+        return sb.ToString();
+    }
+
+    private static string RenderToken(Token token, string input)
+    {
+        var sb = new StringBuilder();
+
+        // Извлекаем подстроку для текущего токена
+        string content = input.Substring(token.StartIndex, token.EndIndex - token.StartIndex + 1);
+
+        switch (token.Type)
+        {
+            case TokenType.Bold:
+                sb.Append("<strong>");
+                sb.Append(RenderInsideTokens(token, input));  // Рекурсивно рендерим вложенные токены
+                sb.Append("</strong>");
+                break;
+            case TokenType.Italics:
+                sb.Append("<em>");
+                sb.Append(RenderInsideTokens(token, input));  // Рекурсивно рендерим вложенные токены
+                sb.Append("</em>");
+                break;
+            case TokenType.Text:
+                sb.Append(content);
+                break;
+        }
+
+        return sb.ToString();
+    }
+
+    private static string RenderInsideTokens(Token token, string input)
+    {
+        var sb = new StringBuilder();
+        int currentIndex = token.StartIndex;
+
+        foreach (var innerToken in token.InsideTokens)
+        {
+            // Добавляем текст между вложенными токенами
+            if (currentIndex < innerToken.StartIndex)
+            {
+                sb.Append(input.Substring(currentIndex, innerToken.StartIndex - currentIndex));
+            }
+
+            // Рекурсивный вызов для вложенного токена
+            sb.Append(RenderToken(innerToken, input));
+
+            currentIndex = innerToken.EndIndex + 1;
+        }
+
+        // Добавляем текст после последнего вложенного токена
+        if (currentIndex < token.EndIndex)
+        {
+            sb.Append(input.Substring(currentIndex, token.EndIndex - currentIndex + 1));
+        }
+
+        return sb.ToString();
     }
 }
