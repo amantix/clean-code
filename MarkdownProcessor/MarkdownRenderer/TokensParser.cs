@@ -110,6 +110,7 @@ public class TokensParser : ITokensParser
                     && previousTagPosition.TagState == TagState.TemporarilyOpen)
                 {
                     matchingOpenTag = previousTagPosition;
+                    tempStack.Push(previousTagPosition);
                     break;
                 }
 
@@ -118,6 +119,7 @@ public class TokensParser : ITokensParser
                     && previousTagPosition.Content == word)
                 {
                     matchingOpenTag = previousTagPosition;
+                    tempStack.Push(previousTagPosition);
                     break;
                 }
 
@@ -134,13 +136,15 @@ public class TokensParser : ITokensParser
             while (tempStack.Count > 0)
             {
                 var tempTagPosition = tempStack.Pop();
+                tagsInRange.Add(tempTagPosition);
 
                 if (tagType == TagType.ItalicTag
                     && tempTagPosition.TagType == TagType.BoldTag
-                    && tempTagPosition.TagState == TagState.Close)
+                    && tempTagPosition.TagState == TagState.Close
+                    && matchingOpenTag != null) 
                 {
+                    Console.WriteLine($"подошло {tempTagPosition.TagIndex}");
                     intersecTagPos = tempTagPosition;
-                    tagsInRange.Add(tempTagPosition);
 
                     tempTagPosition.TagPair.TagState = TagState.NotTag;
                     tempTagPosition.TagState = TagState.NotTag;

@@ -7,7 +7,7 @@ class Program
     public static void Main()
     {
         var tokensParser = new TokensParser();
-        string text = @"__пересе_ч_ения _двойных__ и о_д_инарн__ых_";
+        string text = @"о_д_инарных__";
         string[] tokens = text.Split(' ');
 
         foreach (var item in tokens)
