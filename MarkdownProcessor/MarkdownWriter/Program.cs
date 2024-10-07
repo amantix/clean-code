@@ -6,23 +6,8 @@ class Program
 {
     public static void Main()
     {
-        var boldTag = new BoldTag();
-        var italicTag = new ItalicTag();
-
-        Dictionary<string, Tag> tagsDictionary = new Dictionary<string, Tag>()
-        {
-            {
-                boldTag.MarkdownSymbol,
-                boldTag
-            },
-            {
-                italicTag.MarkdownSymbol,
-                italicTag
-            }
-        };
-
-        var tokensParser = new TokensParser(tagsDictionary);
-        string text = @"_еж__ж n__aд";
+        var tokensParser = new TokensParser();
+        string text = @"__пересе_ч_ения _двойных__ и о_д_инарн__ых_";
         string[] tokens = text.Split(' ');
 
         foreach (var item in tokens)
