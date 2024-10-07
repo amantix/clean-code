@@ -22,7 +22,7 @@ class Program
         };
 
         var tokensParser = new TokensParser(tagsDictionary);
-        string text = @"_ле __ежжи__ лее_";
+        string text = @"_еж__ж n__aд";
         string[] tokens = text.Split(' ');
 
         foreach (var item in tokens)
@@ -39,7 +39,7 @@ class Program
             {
                 Console.WriteLine($"Type: {item.TagType.ToString()}, " +
                                   $"Index: {item.TagIndex}, " +
-                                  $"Sate: {item.TagState}," );
+                                  $"State: {item.TagState}," );
             }
         }
     }

@@ -5,7 +5,10 @@
         Close = 1,
         Open = 2,
         TemporarilyOpen = 3,
-        TemporarilyClose = 4,
-        NotTag = 5,
+        TemporarilyOpenInWord = 4,
+        TemporarilyClose = 5,
+        CloseInWord = 6,
+        OpenInWord = 7,
+        NotTag = 8,
     }
 }

@@ -36,21 +36,20 @@ namespace MarkdownRenderer
         private Token ProcessWord(string word)
         {
             var currentToken = new Token(word);
+
             for (int i = 0; i < word.Length; i++)
             {
-                // TODO: Добавить проверку на наличие цифр в слове
-
                 var tagType = HandleMarkdownSymbol(word, i);
 
                 if (tagType is TagType.NotTag)
                     continue;
 
-                var tagState = DetermineTagState(word, tagType, i);
+                var tagState = DetermineTagState(word, tagType, i, currentToken);
 
                 if (tagState is TagState.NotTag)
                     continue;
 
-                bool isPossibleToAddTag = HandleTagStack(tagType, tagState, i);
+                bool isPossibleToAddTag = HandleTagStack(tagType, tagState, i, word);
 
                 if (isPossibleToAddTag)
                 {
@@ -62,7 +61,6 @@ namespace MarkdownRenderer
                     i++;
                 }
             }
-
             return currentToken;
         }
 
@@ -81,11 +79,11 @@ namespace MarkdownRenderer
             return TagType.NotTag;
         }
 
-        private bool HandleTagStack(TagType tagType, TagState tagState, int tagIndex)
+        private bool HandleTagStack(TagType tagType, TagState tagState, int tagIndex, string word)
         {
-            if (tagState == TagState.TemporarilyOpen)
+            if (tagState == TagState.TemporarilyOpen || tagState == TagState.TemporarilyOpenInWord)
             {
-                var tagPosition = new TagPosition(tagType, tagState, tagIndex);
+                var tagPosition = new TagPosition(tagType, tagState, tagIndex, word);
                 _tagPositionsStack.Push(tagPosition);
 
                 return true;
@@ -100,7 +98,16 @@ namespace MarkdownRenderer
                 {
                     var previousTagPosition = _tagPositionsStack.Pop();
 
-                    if (previousTagPosition.TagType == tagType && previousTagPosition.TagState == TagState.TemporarilyOpen)
+                    if (previousTagPosition.TagType == tagType
+                        && previousTagPosition.TagState == TagState.TemporarilyOpen)
+                    {
+                        matchingOpenTag = previousTagPosition;
+                        break;
+                    }
+
+                    if (previousTagPosition.TagType == tagType
+                        && previousTagPosition.TagState == TagState.TemporarilyOpenInWord
+                        && previousTagPosition.Content == word)
                     {
                         matchingOpenTag = previousTagPosition;
                         break;
@@ -130,7 +137,7 @@ namespace MarkdownRenderer
                 }
 
                 matchingOpenTag.TagState = TagState.Open;
-                var tagPosition = new TagPosition(tagType, TagState.Close, tagIndex);
+                var tagPosition = new TagPosition(tagType, TagState.Close, tagIndex, word);
 
                 tagPosition.TagPair = matchingOpenTag;
                 matchingOpenTag.TagPair = tagPosition;
@@ -143,7 +150,7 @@ namespace MarkdownRenderer
             return false;
         }
 
-        private TagState DetermineTagState(string word, TagType tagType, int symbolIndex)
+        private TagState DetermineTagState(string word, TagType tagType, int symbolIndex, Token currentToken)
         {
             if (symbolIndex == 0)
             {
@@ -156,6 +163,16 @@ namespace MarkdownRenderer
             }
 
             if (tagType == TagType.BoldTag && symbolIndex == word.Length - 2)
+            {
+                return TagState.TemporarilyClose;
+            }
+
+            if (currentToken.TagPositions.Count(t => t.TagType == tagType) % 2 == 0)
+            {
+                return TagState.TemporarilyOpenInWord;
+            }
+
+            if (currentToken.TagPositions.Count(t => t.TagType == tagType) % 2 == 1)
             {
                 return TagState.TemporarilyClose;
             }
