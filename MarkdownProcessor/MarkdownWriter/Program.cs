@@ -22,16 +22,23 @@ class Program
         };
 
         var tokensParser = new TokensParser(tagsDictionary);
-        var allTokens = tokensParser.ParseTokens(@"__п__ _х х_");
+        string text = @"_ле ежжи_";
+        string[] tokens = text.Split(' ');
+
+        foreach (var item in tokens)
+        {
+            Console.WriteLine(item);
+        }
+        // в токене есть слова
+        var allTokens = tokensParser.ParseTokens(text);
+
         foreach (var token in allTokens)
         {
-            Console.WriteLine(token.Tag.MarkdownSymbol);
-        }
-
-        Console.Write("\n\n\n");
-        foreach (var word in tokensParser._wordChecks)
-        {
-            Console.WriteLine($"{word.Key}:{word.Value}");
+            Console.WriteLine($"СЛОВО - {token.Content}");
+            foreach (var item in token.TagPositions)
+            {
+                Console.WriteLine($"индекс найденного тега {item.TagType.ToString()} - {item.TagIndex}");
+            }
         }
     }
 }

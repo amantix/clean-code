@@ -5,15 +5,15 @@ namespace MarkdownRenderer
 {
     public class TagPosition
     {
-        public Tag Tag { get; }
-        public int StartIndex { get; }
-        public TagType TagType { get; } 
+        public TagType TagType { get; set; }
+        public bool IsOpened { get; set; }
+        public int TagIndex { get; set; }
 
-        public TagPosition(Tag tag, int startIndex, TagType tagType)
+        public TagPosition(TagType tag, bool isOpened, int tagIndex)
         {
-            Tag = tag;
-            StartIndex = startIndex;
-            TagType = tagType;
+            TagType = tag;
+            IsOpened = isOpened;
+            TagIndex = tagIndex;
         }
     }
 }

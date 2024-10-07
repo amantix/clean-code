@@ -6,17 +6,12 @@ namespace MarkdownRenderer
 {
     public class Token
     {
-        public Tag Tag { get; set; }
-        public int StartIndex { get; set; }
-        public int EndIndex { get; set; }
-        public TagType TagType { get; }
+        public List<TagPosition> TagPositions { get; set; } = new List<TagPosition>();
+        public string Content { get; set; } = string.Empty;
 
-        public Token(Tag tag, int startIndex, int endIndex, TagType tagType)
+        public Token(string content)
         {
-            Tag = tag;
-            StartIndex = startIndex;
-            EndIndex = endIndex;
-            TagType = tagType;
+            Content = content;
         }
     }
 }

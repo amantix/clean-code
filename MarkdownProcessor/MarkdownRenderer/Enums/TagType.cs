@@ -3,6 +3,6 @@
     public enum TagType
     {
         ItalicTag = 1,  
-        BoldTag = 2   
+        BoldTag = 2,
     }
 }
