@@ -5,7 +5,7 @@ class Program
     public static void Main()
     {
         var tokensParser = new TokensParser();
-        string text = "# __двойного выделения _одинарное_ тоже__\n\n\n\nкак тебе бля";
+        string text = @"\_пере__сечения__ двойных_ и одинарных";
         string[] tokens = text.Split(' ');
 
         var md = new MarkdownConverter(tokensParser);

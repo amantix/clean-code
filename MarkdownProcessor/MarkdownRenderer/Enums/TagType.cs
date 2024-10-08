@@ -6,5 +6,8 @@ public enum TagType
     BoldTag = 2,
     HeaderTag = 3,
     SpanTag = 4,
-    NotTag = 5,
+    EscapedItalicTag = 5,
+    EscapedBoldTag = 6,
+    EscapedTag = 7,
+    NotTag = 8,
 }

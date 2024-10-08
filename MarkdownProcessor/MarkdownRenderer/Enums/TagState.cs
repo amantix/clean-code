@@ -7,5 +7,6 @@ public enum TagState
     TemporarilyOpen = 3,
     TemporarilyOpenInWord = 4,
     TemporarilyClose = 5,
+    SingleTag = 6,
     NotTag = 8,
 }

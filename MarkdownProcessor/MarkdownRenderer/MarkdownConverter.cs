@@ -18,6 +18,7 @@ public class MarkdownConverter : IMarkdownConverter
         _tags.Add(TagType.ItalicTag, new ItalicTag());
         _tags.Add(TagType.SpanTag, new SpanTag());
         _tags.Add(TagType.HeaderTag, new HeaderTag());
+        _tags.Add(TagType.EscapedTag, new EscapedTag());
     }
 
     public string ConvertToHtml(string unprocessedText)
@@ -33,7 +34,10 @@ public class MarkdownConverter : IMarkdownConverter
 
             if (tagPositions.Count > 0)
             {
-                var sortedTagPositions = tagPositions.OrderBy(tp => tp.TagIndex).ToList();
+                var sortedTagPositions = tagPositions.Where(tp => tp.TagState == TagState.Open 
+                                                                  || tp.TagState == TagState.Close
+                                                                  || tp.TagState == TagState.SingleTag)
+                    .OrderBy(tp => tp.TagIndex).ToList();
                 int currentIndex = 0;
 
                 foreach (var tagPosition in sortedTagPositions)
@@ -41,7 +45,17 @@ public class MarkdownConverter : IMarkdownConverter
                     sb.Append(content.Substring(currentIndex, tagPosition.TagIndex - currentIndex));
 
                     bool isNeedToInsertTag = false;
-                    if (tagPosition.TagState == TagState.Open)
+                    if (tagPosition.TagType == TagType.EscapedTag)
+                    {
+                        sb.Append("");
+                        isNeedToInsertTag = true;
+                    }
+                    else if (tagPosition.TagType is TagType.EscapedItalicTag or TagType.EscapedBoldTag)
+                    {
+                        sb.Append("");
+                        isNeedToInsertTag = true;
+                    }
+                    else if (tagPosition.TagState == TagState.Open)
                     {
                         sb.Append(GetHtmlTag(tagPosition.TagType, true));
                         isNeedToInsertTag = true;
@@ -53,7 +67,16 @@ public class MarkdownConverter : IMarkdownConverter
                     }
 
                     if (isNeedToInsertTag)
-                        currentIndex = tagPosition.TagIndex + (tagPosition.TagType == TagType.BoldTag ? 2 : 1);
+                    {
+                        if (tagPosition.TagType == TagType.EscapedTag)
+                        {
+                            currentIndex = tagPosition.TagIndex + 2;
+                        }
+                        else
+                        {
+                            currentIndex = tagPosition.TagIndex + (tagPosition.TagType == TagType.BoldTag ? 2 : 1);
+                        }
+                    }
                 }
 
                 if (currentIndex < content.Length)

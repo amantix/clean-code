@@ -103,6 +103,12 @@ public class TokensParser : ITokensParser
 
             if (tagType is TagType.BoldTag)
                 i++;
+            else if (tagType is TagType.EscapedBoldTag)
+                i += 3;
+            else if (tagType is TagType.EscapedItalicTag)
+                i += 2;
+            else if (tagType is TagType.EscapedTag)
+                i++;
         }
 
         return currentToken;
@@ -113,7 +119,7 @@ public class TokensParser : ITokensParser
         var tagType = HandleMarkdownSymbol(word, index);
 
         if (tagType is TagType.NotTag)
-            return TagType.NotTag;
+            return tagType;
 
         var tagState = DetermineTagState(word, tagType, index, currentToken);
 
@@ -132,6 +138,24 @@ public class TokensParser : ITokensParser
 
     private TagType HandleMarkdownSymbol(string word, int index)
     {
+        if (word[index] == '\\')
+        {
+            if (index < word.Length - 1 && word[index + 1] == '_')
+            {
+                if (index < word.Length - 2 && word[index + 2] == '_')
+                {
+                    return TagType.EscapedBoldTag;
+                }
+
+                return TagType.EscapedItalicTag;
+            }
+
+            if (index < word.Length - 1 && word[index + 1] == '\\')
+            {
+                return TagType.EscapedTag;
+            }
+        }
+
         if (word[index] == '_')
         {
             if (index < word.Length - 1 && word[index + 1] == '_')
@@ -152,9 +176,15 @@ public class TokensParser : ITokensParser
 
     private bool HandleTagStack(TagType tagType, TagState tagState, int tagIndex, string word)
     {
+        if (tagType is TagType.EscapedTag or TagType.EscapedItalicTag or TagType.EscapedBoldTag)
+        {
+            var tagPosition = new TagPosition(tagType, tagState, tagIndex, word);
+            _tagPositionsStack.Push(tagPosition);
 
+            return true;
+        }
 
-        if (tagState == TagState.TemporarilyOpen || tagState == TagState.TemporarilyOpenInWord)
+        if (tagState is TagState.TemporarilyOpen or TagState.TemporarilyOpenInWord)
         {
             var tagPosition = new TagPosition(tagType, tagState, tagIndex, word);
             _tagPositionsStack.Push(tagPosition);
@@ -248,7 +278,13 @@ public class TokensParser : ITokensParser
 
     private TagState DetermineTagState(string word, TagType tagType, int symbolIndex, Token currentToken)
     {
-        if (symbolIndex == 0 && (tagType is TagType.ItalicTag or TagType.BoldTag))
+        if (tagType is TagType.EscapedTag or TagType.EscapedItalicTag or TagType.EscapedBoldTag)
+        {
+            return TagState.SingleTag;
+        }
+
+        int shift = currentToken.TagPositions.Any(t => t.TagType == TagType.EscapedTag) ? 2 : 0;
+        if(symbolIndex - shift == 0 && (tagType is TagType.ItalicTag or TagType.BoldTag))
         {
             return TagState.TemporarilyOpen;
         }
