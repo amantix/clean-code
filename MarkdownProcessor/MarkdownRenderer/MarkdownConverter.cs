@@ -1,14 +1,26 @@
 ﻿using System.Text;
+using MarkdownRenderer.Abstractions;
 using MarkdownRenderer.Enums;
 using MarkdownRenderer.Interfaces;
+using MarkdownRenderer.Tags;
 
 namespace MarkdownRenderer;
 
-public class MarkdownConverter(ITokensParser parser) : IMarkdownConverter
+public class MarkdownConverter : IMarkdownConverter
 {
+    private readonly IDictionary<TagType, Tag> _tags = new Dictionary<TagType, Tag>();
+    private readonly ITokensParser _parser;
+    public MarkdownConverter(ITokensParser parser)
+    {
+        _parser = parser;
+
+        _tags.Add(TagType.BoldTag, new BoldTag());
+        _tags.Add(TagType.ItalicTag, new ItalicTag());
+        _tags.Add(TagType.SpanTag, new SpanTag());
+    }
     public string ConvertToHtml(string unprocessedText)
     {
-        var tokens = parser.ParseTokens(unprocessedText);
+        var tokens = _parser.ParseTokens(unprocessedText);
         StringBuilder sb = new StringBuilder();
 
         foreach (var token in tokens)
@@ -47,7 +59,10 @@ public class MarkdownConverter(ITokensParser parser) : IMarkdownConverter
                 sb.Append(content);
             }
 
-            sb.Append(" ");
+            if (token.Content != "\n")
+            {
+                sb.Append(" ");
+            }
         }
 
         return sb.ToString().Trim();
@@ -55,12 +70,8 @@ public class MarkdownConverter(ITokensParser parser) : IMarkdownConverter
 
     private string GetHtmlTag(TagType tagType, bool isOpening)
     {
-        return tagType switch
-        {
-            TagType.ItalicTag => isOpening ? "<em>" : "</em>",
-            TagType.BoldTag => isOpening ? "<strong>" : "</strong>",
-            TagType.HeaderTag => isOpening ? "<h1>" : "</h1>",
-            _ => ""
-        };
+        var currentTag = _tags[tagType];
+
+        return isOpening ? $"<{currentTag.HtmlTag}>" : $"</{currentTag.HtmlTag}>";
     }
 }

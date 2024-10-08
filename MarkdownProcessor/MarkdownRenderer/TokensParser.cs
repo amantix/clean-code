@@ -16,25 +16,14 @@ public class TokensParser : ITokensParser
         {
             string[] words = line.Split(' ');
 
-            bool isContainsHeaderTag = false;
+            OpenParagraph();
             for (int i = 0; i < words.Length; i++)
             {
                 var token = ProcessWord(words[i], i);
 
-                if (i == 0 && token.TagPositions.Count > 0
-                           && token.TagPositions[0].TagType == TagType.HeaderTag)
-                {
-                    isContainsHeaderTag = true;
-                }
-
-                if (i == words.Length - 1 && isContainsHeaderTag)
-                {
-                    token.TagPositions.Add(new TagPosition(TagType.HeaderTag, TagState.Close, 0, " "));
-                }
-                
-
                 _tokens.Add(token);
             }
+            CloseParagraph();
 
             _tagPositionsStack.Clear();
 
@@ -42,6 +31,22 @@ public class TokensParser : ITokensParser
         }
 
         return _tokens;
+    }
+
+    private void OpenParagraph()
+    {
+        var tokenForParagraph = new Token(" ");
+        tokenForParagraph.TagPositions.Add(new TagPosition(TagType.SpanTag, TagState.Open, 0, string.Empty));
+
+        _tokens.Add(tokenForParagraph);
+    }
+
+    private void CloseParagraph()
+    {
+        var tokenForParagraph = new Token(" ");
+        tokenForParagraph.TagPositions.Add(new TagPosition(TagType.SpanTag, TagState.Close, 0, string.Empty));
+
+        _tokens.Add(tokenForParagraph);
     }
 
     private Token ProcessWord(string word, int wordIndex)
