@@ -8,12 +8,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a0c5167-1aa7-468c-8af7-c1df3223f1df" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Markdown/Classes/Tag.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Markdown/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Markdown/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Markdown.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Markdown/Classes/Parser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/Classes/Parser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Markdown/Classes/Renderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/Classes/Renderer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Markdown/Classes/Token.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/Classes/Token.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Markdown/Enums/Tag.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Markdown/Enums/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/Enums/Tag.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Markdown/Interfaces/IParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/Interfaces/IParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Markdown/Interfaces/IRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/Interfaces/IRenderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Markdown/MdProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Markdown/MdProcessor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MarkdownTests/MarkdownTests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/MarkdownTests/MarkdownTests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MarkdownTests/MdProcessorTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MarkdownTests/MdProcessorTest.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,38 +28,35 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 1
-}</component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
   <component name="ProjectId" id="2mVq9DlhF2lg0lDSAREDfM5CHoM" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.Markdown.executor&quot;: &quot;Run&quot;,
-    &quot;4ada6fc7-22cf-4a3b-ae3a-0bfed151228d.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;aec7eed7-cfcd-49ff-b10f-da2f030b82f9.executor&quot;: &quot;Debug&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Development&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "Development",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;/Users/tagirahmetsin/Library/Application Support/JetBrains/Rider2023.3/resharper-host/DecompilerCache&quot;,
-      &quot;/Users/tagirahmetsin/Library/Application Support/JetBrains/Rider2023.3/resharper-host/SourcesCache&quot;,
-      &quot;/Users/tagirahmetsin/.local/share/Symbols/src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "/Users/tagirahmetsin/Library/Application Support/JetBrains/Rider2023.3/resharper-host/DecompilerCache",
+      "/Users/tagirahmetsin/Library/Application Support/JetBrains/Rider2023.3/resharper-host/SourcesCache",
+      "/Users/tagirahmetsin/.local/share/Symbols/src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Project.Markdown">
     <configuration name="Markdown" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -84,10 +85,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1727171938219</updated>
-      <workItem from="1727171939353" duration="5578000" />
-      <workItem from="1727988305729" duration="19523000" />
-      <workItem from="1728166083692" duration="1317000" />
-      <workItem from="1728340241273" duration="5589000" />
+      <workItem from="1727171939353" duration="4708000" />
     </task>
     <servers />
   </component>
