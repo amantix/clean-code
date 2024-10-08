@@ -8,8 +8,8 @@ namespace MarkdownRenderer;
 
 public class MarkdownConverter : IMarkdownConverter
 {
-    private readonly IDictionary<TagType, Tag> _tags = new Dictionary<TagType, Tag>();
     private readonly ITokensParser _parser;
+    private readonly IDictionary<TagType, Tag> _tags = new Dictionary<TagType, Tag>();
     public MarkdownConverter(ITokensParser parser)
     {
         _parser = parser;
@@ -21,6 +21,7 @@ public class MarkdownConverter : IMarkdownConverter
     public string ConvertToHtml(string unprocessedText)
     {
         var tokens = _parser.ParseTokens(unprocessedText);
+
         StringBuilder sb = new StringBuilder();
 
         foreach (var token in tokens)
@@ -37,16 +38,20 @@ public class MarkdownConverter : IMarkdownConverter
                 {
                     sb.Append(content.Substring(currentIndex, tagPosition.TagIndex - currentIndex));
 
+                    bool isNeedToInsertTag = false;
                     if (tagPosition.TagState == TagState.Open)
                     {
                         sb.Append(GetHtmlTag(tagPosition.TagType, true));
+                        isNeedToInsertTag = true;
                     }
                     else if (tagPosition.TagState == TagState.Close)
                     {
                         sb.Append(GetHtmlTag(tagPosition.TagType, false));
+                        isNeedToInsertTag = true;
                     }
 
-                    currentIndex = tagPosition.TagIndex + (tagPosition.TagType == TagType.BoldTag ? 2 : 1);
+                    if (isNeedToInsertTag)
+                        currentIndex = tagPosition.TagIndex + (tagPosition.TagType == TagType.BoldTag ? 2 : 1);
                 }
 
                 if (currentIndex < content.Length)

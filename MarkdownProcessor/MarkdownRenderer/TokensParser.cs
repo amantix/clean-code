@@ -17,12 +17,14 @@ public class TokensParser : ITokensParser
             string[] words = line.Split(' ');
 
             OpenParagraph();
+
             for (int i = 0; i < words.Length; i++)
             {
                 var token = ProcessWord(words[i], i);
 
                 _tokens.Add(token);
             }
+
             CloseParagraph();
 
             _tagPositionsStack.Clear();
