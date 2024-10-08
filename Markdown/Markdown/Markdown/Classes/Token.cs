@@ -1,9 +1,11 @@
+using System.Runtime.CompilerServices;
 using Markdown.Enums;
 
 namespace Markdown.Classes;
 
 public class Token
 {
-    public Tag Tag { get; set; }
-    public string Content { get; set; }
+    public Tag Tag;
+    public int StartInd;
+    public int EndInd;
 }
