@@ -19,7 +19,16 @@ public class Parser : IParser
     public List<Token> Parse(string text)
     {
         List<Token> parsedTokens = new List<Token>();
-        ExtractTags(text);
+        var allTagsList = ExtractTags(text);
+        var tagsPairsList = ExtractTagsPairs(allTagsList);
+        //проверяем парность - ExctractTagsPairs()
+        //проверяем вложенность - ExctractTagsPairs()
+        //проверяем корректность вложенности - ExctractTagsPairs()
+        
+        //проверяем пробелы
+        //проверяем цифры
+        
+        
         return parsedTokens;
     }
 
@@ -66,7 +75,30 @@ public class Parser : IParser
         return null;
 
     }
-    
-    
+
+    public List<(Tag, Tag)> ExtractTagsPairs(List<Tag> tags)
+    {
+        var tagStack = new Stack<Tag>();
+        var tagsPairsList = new List<(Tag, Tag)>();
+        foreach (var tag in tags)
+        {
+            if (!tag.IsPaired)
+            {
+                continue;
+            }
+
+            if (tagStack.Count == 0 || tagStack.Peek().TagStyle != tag.TagStyle)
+            {
+                tagStack.Push(tag);
+            }
+            else
+            {
+                tagsPairsList.Add((tagStack.Pop(), tag));
+            }
+            
+        }
+
+        return tagsPairsList;
+    }
     
 }

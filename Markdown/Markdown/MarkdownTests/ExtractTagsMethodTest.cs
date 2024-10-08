@@ -22,11 +22,15 @@ public class TagExtractorTests
 
         // Act
         var result = _parser.ExtractTags(input);
+        var result2 = _parser.ExtractTagsPairs(result);
 
         // Assert
         Assert.That(result.Count, Is.EqualTo(2));
         Assert.That(result[0].TagStyle, Is.EqualTo(TagStyle.Bold));
         Assert.That(result[0].Length, Is.EqualTo(2));
+        
+        Assert.That(result2.Count, Is.EqualTo(1));
+        
     }
 
     [Test]
