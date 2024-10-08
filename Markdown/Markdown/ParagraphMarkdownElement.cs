@@ -1,6 +1,6 @@
 namespace Markdown;
 
-public class ParagraphMarkdownElement 
+public class ParagraphMarkdownElement : IMarkdownElement
 {
     private string text;
     private string openingTag = "<p>";

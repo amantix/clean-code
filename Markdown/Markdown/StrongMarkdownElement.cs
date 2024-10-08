@@ -7,7 +7,7 @@ public class StrongMarkdownElement : IMarkdownElement
     private string closingTag = "</strong>";
     public StrongMarkdownElement(string line)
     {
-        text = line;
+        text = line.Substring(2,line.Length-4);
     }
     public string GetHtmlLine()
     {

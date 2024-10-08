@@ -15,6 +15,6 @@ public class MarkdownProcessor
     {
         var elements = _parser.Parse(markdownText);
         var html = _renderer.Render(elements);
-        return html.ToString();
+        return html;
     }  
 }

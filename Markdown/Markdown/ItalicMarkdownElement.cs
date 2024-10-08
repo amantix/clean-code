@@ -7,7 +7,7 @@ public class ItalicMarkdownElement : IMarkdownElement
     private string closingTag = "</em>";
     public ItalicMarkdownElement(string line)
     {
-        text = line;
+        text = line.Substring(1,line.Length-2);
     }
     public string GetHtmlLine()
     {

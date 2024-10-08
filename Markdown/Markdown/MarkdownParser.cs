@@ -26,7 +26,20 @@ namespace Markdown
         }
         private IMarkdownElement CreateMarkdownElement(string line)
         {
-            return null; //продумать логику создания подходящего класса элемента
+            if (line.StartsWith("#"))
+            {
+                return new HeaderMarkdownElement(line);
+            }
+            else if (line.StartsWith("__") && line.EndsWith("__"))
+            {
+                return new StrongMarkdownElement(line);
+            }
+            else if (line.StartsWith("_") && line.EndsWith("_"))
+            {
+                return new ItalicMarkdownElement(line);
+            }
+
+            return new ParagraphMarkdownElement(line);
         }
     }
 }

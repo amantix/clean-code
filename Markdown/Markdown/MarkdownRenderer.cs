@@ -14,7 +14,7 @@ namespace Markdown
 
             foreach (var element in elements)
             {
-                html.AppendLine(element.GetHtmlLine());
+                html.Append(element.GetHtmlLine());
             }
 
             return html.ToString();
