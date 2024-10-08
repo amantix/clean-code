@@ -1,7 +1,6 @@
-﻿namespace MarkdownRenderer.Interfaces
+﻿namespace MarkdownRenderer.Interfaces;
+
+public interface ITokensParser
 {
-    public interface ITokensParser
-    {
-        IEnumerable<Token> ParseTokens(string unprocessedText);
-    }
+    IEnumerable<Token> ParseTokens(string unprocessedText);
 }

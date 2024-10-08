@@ -1,22 +1,12 @@
-﻿using MarkdownRenderer.Abstractions;
-using MarkdownRenderer.Enums;
+﻿using MarkdownRenderer.Enums;
 
-namespace MarkdownRenderer
+namespace MarkdownRenderer;
+
+public class TagPosition(TagType tag, TagState tagState, int tagIndex, string content)
 {
-    public class TagPosition
-    {
-        public string Content { get; set; }
-        public TagType TagType { get; set; }
-        public TagState TagState { get; set; }
-        public int TagIndex { get; set; }
-        public TagPosition? TagPair { get; set; }
-
-        public TagPosition(TagType tag, TagState tagState, int tagIndex, string content)
-        {
-            TagType = tag;
-            TagState = tagState;
-            TagIndex = tagIndex;
-            Content = content;
-        }
-    }
+    public string Content { get; set; } = content;
+    public TagType TagType { get; set; } = tag;
+    public TagState TagState { get; set; } = tagState;
+    public int TagIndex { get; set; } = tagIndex;
+    public TagPosition? TagPair { get; set; }
 }
