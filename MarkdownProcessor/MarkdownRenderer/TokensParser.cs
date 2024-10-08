@@ -5,8 +5,8 @@ namespace MarkdownRenderer;
 
 public class TokensParser : ITokensParser
 {
-    private Stack<TagPosition> _tagPositionsStack = new();
-    private List<Token> _tokens = new();
+    private readonly Stack<TagPosition> _tagPositionsStack = new();
+    private readonly List<Token> _tokens = new();
 
     public IEnumerable<Token> ParseTokens(string unprocessedText)
     {
@@ -25,6 +25,8 @@ public class TokensParser : ITokensParser
                 _tokens.Add(token);
             }
 
+            HandleHeaderTag();
+
             CloseParagraph();
 
             _tagPositionsStack.Clear();
@@ -33,6 +35,17 @@ public class TokensParser : ITokensParser
         }
 
         return _tokens;
+    }
+
+    private void HandleHeaderTag()
+    {
+        if (_tagPositionsStack.Any(t => t.TagType == TagType.HeaderTag))
+        {
+            var token = new Token("#");
+            token.TagPositions.Add(new TagPosition(TagType.HeaderTag, TagState.Close, 0, "#"));
+
+            _tokens.Add(token);
+        }
     }
 
     private void OpenParagraph()
@@ -54,11 +67,15 @@ public class TokensParser : ITokensParser
     private Token ProcessWord(string word, int wordIndex)
     {
         var currentToken = new Token(word);
-        bool isContainsDigits = word.Any(char.IsDigit);
-        
-        if (wordIndex == 0 && word == "#")
+
+        if (wordIndex == 0 && word.Length == 1
+                           && HandleMarkdownSymbol(word, 0) == TagType.HeaderTag)
         {
-            currentToken.TagPositions.Add(new TagPosition(TagType.HeaderTag, TagState.Open, 0, word));
+            var tagPosition = new TagPosition(TagType.HeaderTag, TagState.Open, 0, "#");
+            currentToken.TagPositions.Add(tagPosition);
+            _tagPositionsStack.Push(tagPosition);
+
+            return currentToken;
         }
 
         if (word == string.Empty || word == " ")
@@ -71,7 +88,7 @@ public class TokensParser : ITokensParser
             return currentToken;
         }
 
-        if (isContainsDigits)
+        if (word.Any(char.IsDigit))
         {
             ProcessSymbolsInWord(word, 0, currentToken);
             if (ProcessSymbolsInWord(word, word.Length - 2, currentToken) == TagType.NotTag)
@@ -125,11 +142,18 @@ public class TokensParser : ITokensParser
             return TagType.ItalicTag;
         }
 
+        if (word[index] == '#')
+        {
+            return TagType.HeaderTag;
+        }
+
         return TagType.NotTag;
     }
 
     private bool HandleTagStack(TagType tagType, TagState tagState, int tagIndex, string word)
     {
+
+
         if (tagState == TagState.TemporarilyOpen || tagState == TagState.TemporarilyOpenInWord)
         {
             var tagPosition = new TagPosition(tagType, tagState, tagIndex, word);
@@ -143,7 +167,7 @@ public class TokensParser : ITokensParser
             TagPosition matchingOpenTag = null;
             Stack<TagPosition> tempStack = new Stack<TagPosition>();
 
-            // Достаем все из стека пока не найдем открывающий
+            // Достаем все из стека пока не найдем открывающий тег
             while (_tagPositionsStack.Count > 0)
             {
                 var previousTagPosition = _tagPositionsStack.Pop();
@@ -181,8 +205,7 @@ public class TokensParser : ITokensParser
                 tagsInRange.Add(tempTagPosition);
 
                 if (tagType == TagType.ItalicTag
-                    && tempTagPosition.TagType == TagType.BoldTag
-                    && tempTagPosition.TagState == TagState.Close
+                    && tempTagPosition is { TagType: TagType.BoldTag, TagState: TagState.Close }
                     && matchingOpenTag != null)
                 {
                     intersecTagPos = tempTagPosition;
@@ -208,6 +231,7 @@ public class TokensParser : ITokensParser
             matchingOpenTag.TagPair = tagPosition;
             matchingOpenTag.TagState = TagState.Open;
 
+            // Учитываем правило с пересечением
             if (intersecTagPos != null && !(tagsInRange.Contains(intersecTagPos.TagPair)))
             {
                 matchingOpenTag.TagState = TagState.NotTag;

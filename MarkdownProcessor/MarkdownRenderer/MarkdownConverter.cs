@@ -17,7 +17,9 @@ public class MarkdownConverter : IMarkdownConverter
         _tags.Add(TagType.BoldTag, new BoldTag());
         _tags.Add(TagType.ItalicTag, new ItalicTag());
         _tags.Add(TagType.SpanTag, new SpanTag());
+        _tags.Add(TagType.HeaderTag, new HeaderTag());
     }
+
     public string ConvertToHtml(string unprocessedText)
     {
         var tokens = _parser.ParseTokens(unprocessedText);
@@ -66,7 +68,10 @@ public class MarkdownConverter : IMarkdownConverter
 
             if (token.Content != "\n")
             {
-                sb.Append(" ");
+                if (!(token.TagPositions.Any(t => t.TagType is TagType.SpanTag or TagType.HeaderTag)))
+                {
+                    sb.Append(" ");
+                }
             }
         }
 
