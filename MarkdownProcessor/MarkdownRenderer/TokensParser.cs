@@ -31,7 +31,7 @@ public class TokensParser : ITokensParser
 
             _tagPositionsStack.Clear();
 
-            _tokens.Add(new Token("\n"));
+            //_tokens.Add(new Token("\n"));
         }
 
         return _tokens;
@@ -50,7 +50,7 @@ public class TokensParser : ITokensParser
 
     private void OpenParagraph()
     {
-        var tokenForParagraph = new Token(" ");
+        var tokenForParagraph = new Token("");
         tokenForParagraph.TagPositions.Add(new TagPosition(TagType.SpanTag, TagState.Open, 0, string.Empty));
 
         _tokens.Add(tokenForParagraph);
@@ -58,7 +58,7 @@ public class TokensParser : ITokensParser
 
     private void CloseParagraph()
     {
-        var tokenForParagraph = new Token(" ");
+        var tokenForParagraph = new Token("");
         tokenForParagraph.TagPositions.Add(new TagPosition(TagType.SpanTag, TagState.Close, 0, string.Empty));
 
         _tokens.Add(tokenForParagraph);

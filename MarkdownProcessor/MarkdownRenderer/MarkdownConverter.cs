@@ -16,19 +16,20 @@ public class MarkdownConverter : IMarkdownConverter
 
         _tags.Add(TagType.BoldTag, new BoldTag());
         _tags.Add(TagType.ItalicTag, new ItalicTag());
-        _tags.Add(TagType.SpanTag, new SpanTag());
+        _tags.Add(TagType.SpanTag, new DivTag());
         _tags.Add(TagType.HeaderTag, new HeaderTag());
         _tags.Add(TagType.EscapedTag, new EscapedTag());
     }
 
     public string ConvertToHtml(string unprocessedText)
     {
-        var tokens = _parser.ParseTokens(unprocessedText);
+        var tokens = _parser.ParseTokens(unprocessedText).ToList();
 
         StringBuilder sb = new StringBuilder();
 
-        foreach (var token in tokens)
+        for (int i = 0; i < tokens.Count; i++)
         {
+            var token = tokens[i];
             var content = token.Content;
             var tagPositions = token.TagPositions;
 
@@ -87,12 +88,12 @@ public class MarkdownConverter : IMarkdownConverter
                 sb.Append(content);
             }
 
-            if (token.Content != "\n")
+            if (token.Content != "\n"
+                && !token.TagPositions.Any(t => t.TagType is TagType.SpanTag or TagType.HeaderTag)
+                && i < tokens.Count - 1
+                && !tokens[i + 1].TagPositions.Any(t => t.TagType is TagType.SpanTag or TagType.HeaderTag))
             {
-                if (!(token.TagPositions.Any(t => t.TagType is TagType.SpanTag or TagType.HeaderTag)))
-                {
-                    sb.Append(" ");
-                }
+                sb.Append(" ");
             }
         }
 
