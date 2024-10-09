@@ -86,6 +86,12 @@ public class TokensParser : ITokensParser
             return currentToken;
         }
 
+        if (IsMarkdownLink(word))
+        {
+            currentToken.Content = ConvertMarkdownLinkToHtml(word);
+            return currentToken;
+        }
+
         if (word.Any(char.IsDigit))
         {
             ProcessSymbolsInWord(word, 0, currentToken);
@@ -110,6 +116,30 @@ public class TokensParser : ITokensParser
         }
 
         return currentToken;
+    }
+
+    public string ConvertMarkdownLinkToHtml(string word)
+    {
+        int closeBracket = word.IndexOf("]", StringComparison.Ordinal);
+        int openParen = word.IndexOf("(", closeBracket, StringComparison.Ordinal);
+
+        string linkText = word.Substring(1, closeBracket - 1);
+        int shift = word[^1] == ')' ? 2 : 3;
+        string url = word.Substring(openParen + 1, word.Length - openParen - shift);
+
+        string htmlLink = word[^1] == ')' ? $"<a href=\"{url}\">{linkText}</a>" : $"<a href=\"{url}\">{linkText}</a>{word[^1]}";
+
+        return htmlLink;
+    }
+
+    public bool IsMarkdownLink(string word)
+    {
+        if (word.StartsWith("[") && word.Contains("](") && (word.EndsWith(")") || word[^2] == ')'))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private TagType ProcessSymbolsInWord(string word, int index, Token currentToken)
@@ -323,7 +353,7 @@ public class TokensParser : ITokensParser
         }
 
         int shift = currentToken.TagPositions.Any(t => t.TagType == TagType.EscapedTag) ? 2 : 0;
-        if(symbolIndex - shift == 0 && (tagType is TagType.ItalicTag or TagType.BoldTag))
+        if (symbolIndex - shift == 0 && (tagType is TagType.ItalicTag or TagType.BoldTag))
         {
             return TagState.TemporarilyOpen;
         }

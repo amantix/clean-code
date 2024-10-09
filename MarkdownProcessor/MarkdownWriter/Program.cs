@@ -7,12 +7,12 @@ class Program
         var tokensParser = new TokensParser();
         string text = "# Привет мир!\n" +
                       "\\_Вот это\\_ не должно выделиться тегом из-за экранирования\n" +
-                      "А вот это должно: _окруженный с двух сторон_";
+                      "А вот это должно: _окруженный с двух сторон_ а это ссылка на [Google](https://www.google.com).";
 
         var md = new MarkdownConverter(tokensParser);
         string htmlContent = md.ConvertToHtml(text);
 
-        //Console.WriteLine(htmlContent);
+        Console.WriteLine(htmlContent);
 
         string filePath = Path.Combine(Directory.GetCurrentDirectory(), "index.html");
 

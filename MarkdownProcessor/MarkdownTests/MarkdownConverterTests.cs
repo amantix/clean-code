@@ -97,4 +97,14 @@ public class MarkdownConverterTests
 
         Assert.Equal(expectedHtml, result);
     }
+
+    [Theory]
+    [InlineData(@"Это ссылка на [Google](https://www.google.com)", @"<div>Это ссылка на <a href=""https://www.google.com"">Google</a></div>")]
+    [InlineData(@"Это ссылка на [Google](https://www.google.com). с точкой", @"<div>Это ссылка на <a href=""https://www.google.com"">Google</a>. с точкой</div>")]
+    public void ConvertToHtml_ShouldHandleUrl(string markdownText, string expectedHtml)
+    {
+        string result = _markdownConverter.ConvertToHtml(markdownText);
+
+        Assert.Equal(expectedHtml, result);
+    }
 }
