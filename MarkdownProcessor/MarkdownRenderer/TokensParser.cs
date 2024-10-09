@@ -30,8 +30,6 @@ public class TokensParser : ITokensParser
             CloseParagraph();
 
             _tagPositionsStack.Clear();
-
-            //_tokens.Add(new Token("\n"));
         }
 
         return _tokens;
@@ -174,103 +172,144 @@ public class TokensParser : ITokensParser
         return TagType.NotTag;
     }
 
+    private bool IsEscapedTag(TagType tagType)
+    {
+        return tagType is TagType.EscapedTag or TagType.EscapedItalicTag or TagType.EscapedBoldTag;
+    }
+
+    private bool IsTemporarilyOpen(TagState tagState)
+    {
+        return tagState is TagState.TemporarilyOpen or TagState.TemporarilyOpenInWord;
+    }
+
+    private void PushTagToStack(TagType tagType, TagState tagState, int tagIndex, string word)
+    {
+        var tagPosition = new TagPosition(tagType, tagState, tagIndex, word);
+        _tagPositionsStack.Push(tagPosition);
+    }
+
+    private bool IsMatchingOpenTag(TagPosition tagPosition, TagType tagType, string word)
+    {
+        return (tagPosition.TagType == tagType && tagPosition.TagState == TagState.TemporarilyOpen) ||
+               (tagPosition.TagType == tagType && tagPosition.TagState == TagState.TemporarilyOpenInWord && tagPosition.Content == word);
+    }
+
+    private TagPosition? FindMatchingOpenTag(TagType tagType, string word, Stack<TagPosition> tempStack)
+    {
+        TagPosition? matchingOpenTag = null;
+
+        while (_tagPositionsStack.Count > 0)
+        {
+            var previousTag = _tagPositionsStack.Pop();
+            tempStack.Push(previousTag);
+
+            if (IsMatchingOpenTag(previousTag, tagType, word))
+            {
+                matchingOpenTag = previousTag;
+                break;
+            }
+        }
+
+        return matchingOpenTag;
+    }
+
+    private TagPosition? RestoreAndValidateTags(TagPosition? matchingOpenTag, TagType tagType, Stack<TagPosition> tempStack, int tagIndex, string word)
+    {
+        var tagsInRange = new HashSet<TagPosition>();
+        TagPosition? intersectTag = null;
+
+        while (tempStack.Count > 0)
+        {
+            var tempTagPosition = tempStack.Pop();
+            tagsInRange.Add(tempTagPosition);
+
+            intersectTag = GetEnclosedTagInBoldAndItalic(tagType, tempTagPosition, matchingOpenTag);
+
+            _tagPositionsStack.Push(tempTagPosition);
+        }
+
+        if (matchingOpenTag is null)
+        {
+            return null;
+        }
+
+        var newTag = CreateAndCloseTag(tagType, tagIndex, word, matchingOpenTag);
+
+        ValidateIntersectionRule(tagsInRange, intersectTag, matchingOpenTag, newTag);
+
+        return newTag;
+    }
+
+    private void ValidateIntersectionRule(HashSet<TagPosition> tagsInRange, TagPosition? intersectTag, TagPosition matchingOpenTag, TagPosition newTag)
+    {
+        if (intersectTag != null && !(tagsInRange.Contains(intersectTag.TagPair!)))
+        {
+            matchingOpenTag.TagState = TagState.NotTag;
+            newTag.TagState = TagState.NotTag;
+        }
+    }
+    private TagPosition CreateAndCloseTag(TagType tagType, int tagIndex, string word, TagPosition matchingOpenTag)
+    {
+        var tagPosition = new TagPosition(tagType, TagState.Close, tagIndex, word)
+        {
+            TagPair = matchingOpenTag
+        };
+
+        matchingOpenTag.TagPair = tagPosition;
+        matchingOpenTag.TagState = TagState.Open;
+
+        return tagPosition;
+    }
+
+    private TagPosition? GetEnclosedTagInBoldAndItalic(TagType tagType, TagPosition currentTag, TagPosition? matchingOpenTag)
+    {
+        if (tagType == TagType.ItalicTag
+            && currentTag is { TagType: TagType.BoldTag, TagState: TagState.Close }
+            && matchingOpenTag != null)
+        {
+            currentTag.TagPair!.TagState = TagState.NotTag;
+            currentTag.TagState = TagState.NotTag;
+
+            return currentTag;
+        }
+
+        return null;
+    }
+
+    private bool HandleTemporarilyClose(TagType tagType, int tagIndex, string word)
+    {
+        Stack<TagPosition> tempStack = new Stack<TagPosition>();
+        TagPosition? matchingOpenTag = FindMatchingOpenTag(tagType, word, tempStack);
+
+        var newTag = RestoreAndValidateTags(matchingOpenTag, tagType, tempStack, tagIndex, word);
+
+        if (newTag is null)
+        {
+            return false;
+        }
+
+        _tagPositionsStack.Push(newTag);
+
+        return true;
+    }
+
     private bool HandleTagStack(TagType tagType, TagState tagState, int tagIndex, string word)
     {
-        if (tagType is TagType.EscapedTag or TagType.EscapedItalicTag or TagType.EscapedBoldTag)
+        if (IsEscapedTag(tagType))
         {
-            var tagPosition = new TagPosition(tagType, tagState, tagIndex, word);
-            _tagPositionsStack.Push(tagPosition);
-
+            PushTagToStack(tagType, tagState, tagIndex, word);
             return true;
         }
 
-        if (tagState is TagState.TemporarilyOpen or TagState.TemporarilyOpenInWord)
+        if (IsTemporarilyOpen(tagState))
         {
-            var tagPosition = new TagPosition(tagType, tagState, tagIndex, word);
-            _tagPositionsStack.Push(tagPosition);
-
+            PushTagToStack(tagType, tagState, tagIndex, word);
             return true;
         }
 
         if (tagState == TagState.TemporarilyClose)
         {
-            TagPosition matchingOpenTag = null;
-            Stack<TagPosition> tempStack = new Stack<TagPosition>();
-
-            // Достаем все из стека пока не найдем открывающий тег
-            while (_tagPositionsStack.Count > 0)
-            {
-                var previousTagPosition = _tagPositionsStack.Pop();
-
-                if (previousTagPosition.TagType == tagType
-                    && previousTagPosition.TagState == TagState.TemporarilyOpen)
-                {
-                    matchingOpenTag = previousTagPosition;
-                    tempStack.Push(previousTagPosition);
-                    break;
-                }
-
-                if (previousTagPosition.TagType == tagType
-                    && previousTagPosition.TagState == TagState.TemporarilyOpenInWord
-                    && previousTagPosition.Content == word)
-                {
-                    matchingOpenTag = previousTagPosition;
-                    tempStack.Push(previousTagPosition);
-                    break;
-                }
-
-                tempStack.Push(previousTagPosition);
-            }
-
-            // Хешсет для хранения всех тегов между открытым и закрытым
-            var tagsInRange = new HashSet<TagPosition>();
-
-            // Промежуточный тег для проверки условия пересечения двойных и одинарных подчерков
-            TagPosition? intersecTagPos = null;
-
-            // Кладем все обратно + учитваем, что между одинарными двойное не работает
-            while (tempStack.Count > 0)
-            {
-                var tempTagPosition = tempStack.Pop();
-                tagsInRange.Add(tempTagPosition);
-
-                if (tagType == TagType.ItalicTag
-                    && tempTagPosition is { TagType: TagType.BoldTag, TagState: TagState.Close }
-                    && matchingOpenTag != null)
-                {
-                    intersecTagPos = tempTagPosition;
-
-                    tempTagPosition.TagPair.TagState = TagState.NotTag;
-                    tempTagPosition.TagState = TagState.NotTag;
-                }
-
-                _tagPositionsStack.Push(tempTagPosition);
-            }
-
-            // Если не нашли открывающий, выходим
-            if (matchingOpenTag is null)
-            {
-                return false;
-            }
-
-            var tagPosition = new TagPosition(tagType, TagState.Close, tagIndex, word)
-            {
-                TagPair = matchingOpenTag
-            };
-
-            matchingOpenTag.TagPair = tagPosition;
-            matchingOpenTag.TagState = TagState.Open;
-
-            // Учитываем правило с пересечением
-            if (intersecTagPos != null && !(tagsInRange.Contains(intersecTagPos.TagPair)))
-            {
-                matchingOpenTag.TagState = TagState.NotTag;
-                tagPosition.TagState = TagState.NotTag;
-            }
-
-            _tagPositionsStack.Push(tagPosition);
-
-            return true;
+            return HandleTemporarilyClose(tagType, tagIndex, word);
         }
 
         return false;
