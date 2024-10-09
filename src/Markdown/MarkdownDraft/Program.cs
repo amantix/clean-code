@@ -34,8 +34,12 @@ class Program
         string str14 = "# Заголовок первого уровня\n\nЭто пример длинного текста для тестирования парсера Markdown. В этом тексте мы используем _курсив_ и __жирный текст__ для проверки, как работает обработка таких тегов.\n\nТестирование парсера важно для того, чтобы убедиться, что все теги правильно интерпретируются. Например, _курсивный текст_ помогает выделять слова в предложениях, а __жирный текст__ используется для акцентирования на важных фразах.\n\n# Вложенные элементы\n\nКроме этого, необходимо проверять, как работает парсер с _вложенными_ тегами. Например, вот так: __жирный _и курсив_ в одном предложении__.\n\nТакже стоит протестировать парсер на больших объемах текста, чтобы убедиться, что __он не замедляется__ при обработке длинных строк. Оптимизация работы парсера очень важна, так как это напрямую влияет на производительность программы.\n\n# Тестирование производительности\n\nВот пример длинного текста с большим количеством тегов для проверки производительности:\n\n__Это жирный текст__, а вот _курсивный текст_, который используется для различных тестов. Продолжаем добавлять больше текста, чтобы создать нагрузку на парсер. Проверяем, как _курсив_ и __жирный__ текст взаимодействуют друг с другом.\n\nТеперь давайте добавим еще больше текста, чтобы убедиться, что парсер справляется с обработкой длинных строк. Мы будем добавлять теги _курсива_ и __жирного текста__, чтобы увидеть, как они работают вместе.\n\n__Жирный текст__ должен обрабатываться правильно, как и _курсивный текст_. Это важно, потому что парсер должен работать с множеством символов и тегов одновременно. Важно убедиться, что программа не начинает __замедляться__ или _падать_ на больших данных.\n\n# Заключение\n\nПарсеры Markdown используются в самых разных проектах, от генерации веб-страниц до редактирования текстов в блогах. Тестирование парсера на различных входных данных позволяет убедиться в его стабильности и производительности. __Жирный текст__ и _курсивный текст_ помогают создавать более выразительный контент, и важно, чтобы парсер корректно обрабатывал эти элементы.";
         string str15 =
             "# Header";
-        
-        
+
+
+
+        /*string test = "\\\\\\_wdada\\_      \\_wdada\\_";
+        Console.WriteLine(GetEscapedText(test));
+        return;*/
         var stopwatch = new Stopwatch();
         stopwatch.Start();
 
@@ -83,6 +87,8 @@ class Program
     {
         var listOfSpecialSymbols = new List<SpecialSymbol>();
         var openSymbolsStack = new List<SpecialSymbol>();
+        // Строка с обработанным экранированием и пробелами
+        var sb = new StringBuilder();
         var mainToken = new Token()
         {
             Type = TokenType.Main,
@@ -92,11 +98,19 @@ class Program
             TagLength = 0,
             InsideTokens = new List<Token>()
         }; 
+        
+        
         bool isOpenedHeader = false;
-        bool isBoldOpened = false;
 
         for (int i = 0; i < str.Length; i++)
         {
+            
+            // Если перед тегом стоит четное кол-во экранирований, то пропускаем этот тег
+            if (IsEscaped(str, i))
+            {
+                continue;
+            }
+            
             if (str[i] == '#') // Пробел после решетки обязателен,
             // чтобы header сработал
             {
@@ -294,8 +308,82 @@ class Program
         
         return mainToken.InsideTokens;
     }
+
+    public static string GetEscapedText(string textToken)
+    {
+        var sb = new StringBuilder();
+        
+        // Здесь будем удалять лишние пробелы и обрабатывать экранирование
+        for (int i = 0; i < textToken.Length; i++)
+        {
+            if (i > 0 && textToken[i - 1] == ' ' && textToken[i] == ' ')
+            {
+                continue;
+            }
+
+            if (textToken[i] == '\\')
+            {
+                int escapedCounter = 0;
+
+                while (i < textToken.Length && textToken[i] == '\\')
+                {
+                    ++escapedCounter;
+                    ++i;
+                }
+                
+                // Если следующий символ специальный, то не добавляем символ экранирования
+                
+                // Так, тут по сути escapedCounter % 2 == 1 всегда будет давать ложь,
+                // тк мы еще в самом первом цикле проверяли перед добавлением специального символа
+                // является ли он escaped
+                
+                // Просто символы парами экранируют друг друга
+                if (escapedCounter % 2 == 0)
+                {
+                    sb.Append(textToken.Substring(i - escapedCounter, escapedCounter / 2));
+                }
+                // Нечетное колво экранирующих символов
+                else
+                {
+                    // Если следюущий после экранирующих специальный, то его нужно удалить, а другие парами сопоставить
+                    if (IsNextSymbolIsSpecial(textToken, i - 1))
+                    {
+                        sb.Append(textToken.Substring(i - escapedCounter, escapedCounter / 2));
+                    }
+                    else
+                    {
+                        // В проивном случае просто пары удалим и один нечетный оставим
+                        sb.Append(textToken.Substring(i - escapedCounter, escapedCounter / 2 + 1));
+
+                    }
+                }
+            }
+
+            if (i < textToken.Length)
+            {
+                sb.Append(textToken[i]);
+            }
+        }
+
+        return sb.ToString();
+    }
+
+    public static bool IsNextSymbolIsSpecial(string sourceString, int currentIndex)
+    {
+        if (currentIndex < sourceString.Length - 1)
+        {
+            return sourceString[currentIndex + 1] == '#' || sourceString[currentIndex + 1] == '_';
+        }
+
+        if (currentIndex < sourceString.Length - 2)
+        {
+            return sourceString.Substring(currentIndex + 1, 2) == "__";
+        }
+
+        return false;
+    }
     
-    bool IsEscaped(string str, int index)
+    public static bool IsEscaped(string str, int index)
     {
         // Проверяем, есть ли перед текущим символом экранирующий символ
         if (index > 0 && str[index - 1] == '\\')
@@ -486,7 +574,7 @@ class Program
                 sb.Append("</em>");
                 break;
             case TokenType.Text:
-                sb.Append(content);
+                sb.Append(GetEscapedText(content));
                 break;
         }
 
