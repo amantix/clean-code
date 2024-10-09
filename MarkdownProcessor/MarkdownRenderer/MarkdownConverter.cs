@@ -34,9 +34,7 @@ public class MarkdownConverter : IMarkdownConverter
 
             if (tagPositions.Count > 0)
             {
-                var sortedTagPositions = tagPositions.Where(tp => tp.TagState == TagState.Open 
-                                                                  || tp.TagState == TagState.Close
-                                                                  || tp.TagState == TagState.SingleTag)
+                var sortedTagPositions = tagPositions.Where(tp => tp.TagState is TagState.Open or TagState.Close or TagState.SingleTag)
                     .OrderBy(tp => tp.TagIndex).ToList();
                 int currentIndex = 0;
 

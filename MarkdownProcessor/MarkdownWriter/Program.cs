@@ -5,10 +5,28 @@ class Program
     public static void Main()
     {
         var tokensParser = new TokensParser();
-        string text = @"\_пере__сечения__ двойных_ и одинарных";
-        string[] tokens = text.Split(' ');
+        string text = "# пересечени_я_ д__войных__ и одинарных \n леее";
 
         var md = new MarkdownConverter(tokensParser);
-        Console.WriteLine(md.ConvertToHtml(text)); 
+        string htmlContent = md.ConvertToHtml(text);
+
+        Console.WriteLine(htmlContent);
+
+        string filePath = Path.Combine(Directory.GetCurrentDirectory(), "index.html");
+
+        if (!File.Exists(filePath))
+        {
+            using (FileStream fs = File.Create(filePath))
+            {
+                Console.WriteLine($"Файл {filePath} успешно создан.");
+            }
+        }
+
+        File.WriteAllText(filePath, htmlContent);
+
+        Console.ForegroundColor = ConsoleColor.Red; 
+        Console.WriteLine($"\nHtml разметка записана в {filePath}");
+        Console.ResetColor(); 
+
     }
 }
