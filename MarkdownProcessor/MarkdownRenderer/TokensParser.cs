@@ -1,4 +1,5 @@
 ﻿using MarkdownRenderer.Enums;
+using MarkdownRenderer.Extensions;
 using MarkdownRenderer.Interfaces;
 
 namespace MarkdownRenderer;
@@ -7,14 +8,20 @@ public class TokensParser : ITokensParser
 {
     private readonly Stack<TagPosition> _tagPositionsStack = new();
     private readonly List<Token> _tokens = new();
+    private readonly LinkReferenceHandler _linkReferenceHandler = new();
 
     public IEnumerable<Token> ParseTokens(string unprocessedText)
     {
         string[] lines = unprocessedText.Split('\n');
 
-        foreach (var line in lines)
+        foreach (var linkLine in lines.Where(_linkReferenceHandler.IsReferenceStyleLink))
         {
-            string[] words = line.Split(' ');
+            _linkReferenceHandler.HandleReferenceStyleLink(linkLine); 
+        }
+
+        foreach (var line in lines.Where(line => !_linkReferenceHandler.IsReferenceStyleLink(line)))
+        {
+            string[] words = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             OpenParagraph();
 
@@ -76,19 +83,25 @@ public class TokensParser : ITokensParser
             return currentToken;
         }
 
-        if (word == string.Empty || word == " ")
+        if (word is "" or " ")
         {
             return currentToken;
         }
 
-        if (word == "__" || word == "____")
+        if (word is "__" or "____")
         {
             return currentToken;
         }
 
-        if (IsMarkdownLink(word))
+        if (word.IsWordContainsReferenceToLink())
         {
-            currentToken.Content = ConvertMarkdownLinkToHtml(word);
+            currentToken.Content = _linkReferenceHandler.ConvertLinkFromRefToHtml(word);
+            return currentToken;
+        }
+
+        if (word.IsWordContainsLink())
+        {
+            currentToken.Content = _linkReferenceHandler.ConvertLinkFromWordToHtml(word);
             return currentToken;
         }
 
@@ -116,30 +129,6 @@ public class TokensParser : ITokensParser
         }
 
         return currentToken;
-    }
-
-    public string ConvertMarkdownLinkToHtml(string word)
-    {
-        int closeBracket = word.IndexOf("]", StringComparison.Ordinal);
-        int openParen = word.IndexOf("(", closeBracket, StringComparison.Ordinal);
-
-        string linkText = word.Substring(1, closeBracket - 1);
-        int shift = word[^1] == ')' ? 2 : 3;
-        string url = word.Substring(openParen + 1, word.Length - openParen - shift);
-
-        string htmlLink = word[^1] == ')' ? $"<a href=\"{url}\">{linkText}</a>" : $"<a href=\"{url}\">{linkText}</a>{word[^1]}";
-
-        return htmlLink;
-    }
-
-    public bool IsMarkdownLink(string word)
-    {
-        if (word.StartsWith("[") && word.Contains("](") && (word.EndsWith(")") || word[^2] == ')'))
-        {
-            return true;
-        }
-
-        return false;
     }
 
     private TagType ProcessSymbolsInWord(string word, int index, Token currentToken)
@@ -200,16 +189,6 @@ public class TokensParser : ITokensParser
         }
 
         return TagType.NotTag;
-    }
-
-    private bool IsEscapedTag(TagType tagType)
-    {
-        return tagType is TagType.EscapedTag or TagType.EscapedItalicTag or TagType.EscapedBoldTag;
-    }
-
-    private bool IsTemporarilyOpen(TagState tagState)
-    {
-        return tagState is TagState.TemporarilyOpen or TagState.TemporarilyOpenInWord;
     }
 
     private void PushTagToStack(TagType tagType, TagState tagState, int tagIndex, string word)
@@ -278,6 +257,7 @@ public class TokensParser : ITokensParser
             newTag.TagState = TagState.NotTag;
         }
     }
+
     private TagPosition CreateAndCloseTag(TagType tagType, int tagIndex, string word, TagPosition matchingOpenTag)
     {
         var tagPosition = new TagPosition(tagType, TagState.Close, tagIndex, word)
@@ -325,13 +305,13 @@ public class TokensParser : ITokensParser
 
     private bool HandleTagStack(TagType tagType, TagState tagState, int tagIndex, string word)
     {
-        if (IsEscapedTag(tagType))
+        if (tagType.IsEscapedTag())
         {
             PushTagToStack(tagType, tagState, tagIndex, word);
             return true;
         }
 
-        if (IsTemporarilyOpen(tagState))
+        if (tagState.IsTemporarilyOpen())
         {
             PushTagToStack(tagType, tagState, tagIndex, word);
             return true;

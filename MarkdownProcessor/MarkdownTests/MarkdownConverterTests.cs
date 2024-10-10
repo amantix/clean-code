@@ -4,13 +4,12 @@ namespace MarkdownTests;
 
 public class MarkdownConverterTests
 {
-    private readonly TokensParser _tokensParser;
     private readonly MarkdownConverter _markdownConverter;
 
     public MarkdownConverterTests()
     {
-        _tokensParser = new TokensParser();
-        _markdownConverter = new MarkdownConverter(_tokensParser);
+        var tokensParser = new TokensParser();
+        _markdownConverter = new MarkdownConverter(tokensParser);
     }
 
     [Theory]
@@ -101,6 +100,12 @@ public class MarkdownConverterTests
     [Theory]
     [InlineData(@"Ёто ссылка на [Google](https://www.google.com)", @"<div>Ёто ссылка на <a href=""https://www.google.com"">Google</a></div>")]
     [InlineData(@"Ёто ссылка на [Google](https://www.google.com). с точкой", @"<div>Ёто ссылка на <a href=""https://www.google.com"">Google</a>. с точкой</div>")]
+    [InlineData(@"Ёто ссылка на .[Google](https://www.google.com). с точкой", @"<div>Ёто ссылка на .<a href=""https://www.google.com"">Google</a>. с точкой</div>")]
+    [InlineData(@"Ёто ссылка на .[Google](https://www.google.com). с точкой", @"<div>Ёто ссылка на .<a href=""https://www.google.com"">Google</a>. с точкой</div>")]
+    [InlineData("я люблю [программирование][1] \n [1]: https://www.programming.com/", @"<div>я люблю <a href=""https://www.programming.com/"" title=>программирование</a></div>")]
+    [InlineData("я люблю текстслева[программирование][1]текстсправа \n [1]: https://www.programming.com/ \"с комментом\"", @"<div>я люблю текстслева<a href=""https://www.programming.com/"" title=""с комментом"">программирование</a>текстсправа</div>")]
+    [InlineData("[1]: https://www.programming.com/ \n я люблю текстслева[программирование][1]текстсправа ", @"<div>я люблю текстслева<a href=""https://www.programming.com/"" title=>программирование</a>текстсправа</div>")]
+    [InlineData("[1]: https://www.programming.com/ \"с комментом\" \n я люблю текстслева[программирование][1]текстсправа ", @"<div>я люблю текстслева<a href=""https://www.programming.com/"" title=""с комментом"">программирование</a>текстсправа</div>")]
     public void ConvertToHtml_ShouldHandleUrl(string markdownText, string expectedHtml)
     {
         string result = _markdownConverter.ConvertToHtml(markdownText);
