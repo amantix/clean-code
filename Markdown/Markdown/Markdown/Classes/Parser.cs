@@ -25,10 +25,14 @@ public class Parser : IParser
         //проверяем парность - ExtractTagsPairs()
         //проверяем вложенность - ExtractTagsPairs()
         //проверяем корректность вложенности - ExtractTagsPairs()
-        
+        //пофиксить _text__text_ ситуацию получаем <em>text__text</em> для _text_text_text_ <em>text</em>text<em>text</em>
+        //пофиксил верхнее
         //проверяем экранирование - ProcessEscapeCharacters()
+        
         //проверить внутри слова если да, то пробелы не проверять
         //проверяем пробелы 
+        //проверить __ _ _ __ и _ __ __ _ (второе не должно работать)
+        
         //проверяем цифры - SkipTagWhenInDigitSeq()
         
         
@@ -81,29 +85,35 @@ public class Parser : IParser
 
     public List<(Tag, Tag)> ExtractTagsPairs(List<Tag> tags)
     {
-        var tagStack = new Stack<Tag>();
-        var tagsPairsList = new List<(Tag, Tag)>();
+        var tagStackDict = new Dictionary<TagStyle, Stack<Tag>>();
+        var tagPairsList = new List<(Tag, Tag)>();
         foreach (var tag in tags)
         {
             if (!tag.IsPaired)
             {
                 continue;
             }
-
-            if (tagStack.Count == 0 || tagStack.Peek().TagStyle != tag.TagStyle)
+            if (!tagStackDict.ContainsKey(tag.TagStyle))
             {
-                tagStack.Push(tag);
+                tagStackDict[tag.TagStyle] = new Stack<Tag>();
+                
+            }
+            var tagStack = tagStackDict[tag.TagStyle];
+            if (tagStack.Count() > 0)
+            {
+                tagPairsList.Add((tagStack.Pop(), tag));
             }
             else
             {
-                tagsPairsList.Add((tagStack.Pop(), tag));
+                tagStack.Push(tag);
             }
-            
         }
 
-        return tagsPairsList;
+        return tagPairsList;
     }
-
+    
+    
+    
     private List<Tag> ProcessEscapeCharacters(List<Tag> tags)
     {
         var result = new List<Tag>();
