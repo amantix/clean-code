@@ -20,13 +20,16 @@ public class Parser : IParser
     {
         List<Token> parsedTokens = new List<Token>();
         var allTagsList = ExtractTags(text);
-        var tagsPairsList = ExtractTagsPairs(allTagsList);
-        //проверяем парность - ExctractTagsPairs()
-        //проверяем вложенность - ExctractTagsPairs()
-        //проверяем корректность вложенности - ExctractTagsPairs()
+        var tagsWithoutEscapeCharacters = ProcessEscapeCharacters(allTagsList);
+        var tagsPairsList = ExtractTagsPairs(tagsWithoutEscapeCharacters);
+        //проверяем парность - ExtractTagsPairs()
+        //проверяем вложенность - ExtractTagsPairs()
+        //проверяем корректность вложенности - ExtractTagsPairs()
         
-        //проверяем пробелы
-        //проверяем цифры
+        //проверяем экранирование - ProcessEscapeCharacters()
+        //проверить внутри слова если да, то пробелы не проверять
+        //проверяем пробелы 
+        //проверяем цифры - SkipTagWhenInDigitSeq()
         
         
         return parsedTokens;
@@ -100,5 +103,42 @@ public class Parser : IParser
 
         return tagsPairsList;
     }
+
+    private List<Tag> ProcessEscapeCharacters(List<Tag> tags)
+    {
+        var result = new List<Tag>();
+        for (int i = 0; i < tags.Count; i++)
+        {
+            if (tags[i].TagStyle == TagStyle.EscapeCharacter
+                && i + 1 < tags.Count
+                && tags[i + 1].Index == i + 1)
+            {
+                i++;
+                continue;
+            }
+            result.Add(tags[i]);
+        }
+
+        return result;
+    }
+
+    private List<(Tag, Tag)> SkipTagWhenInDigitSeq(List<(Tag, Tag)> tags, string text)
+    {
+        var tagsListWithValidInDigitTag = new List<(Tag, Tag)>();
+        foreach (var tagPair in tags)
+        {
+            if (tagPair.Item1.Index != 0
+                && tagPair.Item2.Index + 1 < text.Length
+                && Char.IsDigit(text[tagPair.Item1.Index - 1])
+                && Char.IsDigit(text[tagPair.Item2.Index + 1]))
+            {
+                continue;
+            }
+            tagsListWithValidInDigitTag.Add(tagPair);
+        }
+
+        return tagsListWithValidInDigitTag;
+    }
+    
     
 }

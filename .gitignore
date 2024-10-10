@@ -3,4 +3,4 @@ obj/
 *.sln
 .DS_Store
 .idea/
-.user
+Folder.DotSettings.user
