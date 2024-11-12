@@ -1,0 +1,138 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Рабочий стол\\C# PROJECTS\\Md-Processor\\MarkdownProcessor\\ProjectForTest\\ProjectForTest.csproj": {}
+  },
+  "projects": {
+    "C:\\Рабочий стол\\C# PROJECTS\\Md-Processor\\MarkdownProcessor\\MarkdownProcessor\\MarkdownProcessorLib.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Рабочий стол\\C# PROJECTS\\Md-Processor\\MarkdownProcessor\\MarkdownProcessor\\MarkdownProcessorLib.csproj",
+        "projectName": "MarkdownProcessorLib",
+        "projectPath": "C:\\Рабочий стол\\C# PROJECTS\\Md-Processor\\MarkdownProcessor\\MarkdownProcessor\\MarkdownProcessorLib.csproj",
+        "packagesPath": "C:\\Users\\79870\\.nuget\\packages\\",
+        "outputPath": "C:\\Рабочий стол\\C# PROJECTS\\Md-Processor\\MarkdownProcessor\\MarkdownProcessor\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\79870\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.11.1, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.9.2, )"
+            },
+            "xunit.runner.visualstudio": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.8.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Рабочий стол\\C# PROJECTS\\Md-Processor\\MarkdownProcessor\\ProjectForTest\\ProjectForTest.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Рабочий стол\\C# PROJECTS\\Md-Processor\\MarkdownProcessor\\ProjectForTest\\ProjectForTest.csproj",
+        "projectName": "ProjectForTest",
+        "projectPath": "C:\\Рабочий стол\\C# PROJECTS\\Md-Processor\\MarkdownProcessor\\ProjectForTest\\ProjectForTest.csproj",
+        "packagesPath": "C:\\Users\\79870\\.nuget\\packages\\",
+        "outputPath": "C:\\Рабочий стол\\C# PROJECTS\\Md-Processor\\MarkdownProcessor\\ProjectForTest\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\79870\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "C:\\Рабочий стол\\C# PROJECTS\\Md-Processor\\MarkdownProcessor\\MarkdownProcessor\\MarkdownProcessorLib.csproj": {
+                "projectPath": "C:\\Рабочий стол\\C# PROJECTS\\Md-Processor\\MarkdownProcessor\\MarkdownProcessor\\MarkdownProcessorLib.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
