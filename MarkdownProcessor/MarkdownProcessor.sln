@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDConverter", "MDConverter\MDConverter.csproj", "{BA199208-7F93-402D-B23A-65DCD3C9B7C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdownToHtmlTests", "MarkdownToHtmlTests\MarkdownToHtmlTests.csproj", "{7A732C7D-0BF9-4AC3-AD56-5C0F489AD5E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MdOutput", "MdOutput\MdOutput.csproj", "{23FAB774-8148-4614-9529-16C4D839A44A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA199208-7F93-402D-B23A-65DCD3C9B7C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA199208-7F93-402D-B23A-65DCD3C9B7C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA199208-7F93-402D-B23A-65DCD3C9B7C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA199208-7F93-402D-B23A-65DCD3C9B7C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A732C7D-0BF9-4AC3-AD56-5C0F489AD5E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A732C7D-0BF9-4AC3-AD56-5C0F489AD5E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A732C7D-0BF9-4AC3-AD56-5C0F489AD5E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A732C7D-0BF9-4AC3-AD56-5C0F489AD5E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23FAB774-8148-4614-9529-16C4D839A44A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23FAB774-8148-4614-9529-16C4D839A44A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23FAB774-8148-4614-9529-16C4D839A44A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23FAB774-8148-4614-9529-16C4D839A44A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
