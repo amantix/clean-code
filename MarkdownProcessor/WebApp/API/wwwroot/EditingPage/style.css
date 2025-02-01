@@ -1,0 +1,484 @@
+﻿html, body{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    flex-direction: column;
+    align-items: center;
+    background-color: #121212;
+}
+
+/*------------------   CONTENT   ------------------*/
+
+.description-container{
+    width: 95%;
+    height: 15vh;
+    margin: 0;
+}
+
+#projectName{
+    color: #d6d6d6;
+    font-size: 34px;
+    margin: 0 18px;
+}
+
+
+#authorText{
+    font-size: 20px;
+    color: #737373;
+    margin: 8px 18px;
+    font-weight: bold;
+}
+
+.main-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.form-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.form-area{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 95%;
+    height: 500px;
+}
+
+.html-buttons{
+    display: flex;
+    flex-direction: row;
+    width: 95%;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right:20px;
+}
+
+.redactor-buttons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right:20px;
+}
+
+button {
+    background-color: #474747;
+    color: #E0E0E0;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    white-space: nowrap;
+}
+
+button:hover {
+    background-color: #656565;
+    transform: scale(1.05);
+}
+
+button:active {
+    background-color: #454545;
+}
+
+#markdown-form{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding:0;
+}
+.markdown-textarea{
+    resize: none;
+    background-color: #252525;
+    border-radius: 10px;
+    margin: 0 20px;
+    color: #a1a1a1;
+    padding: 20px;
+    width: 100%;
+    height: 80%;
+    font-size: 20px;
+}
+
+#markdown-result {
+    resize: none;
+    background-color: #252525;
+    color: #a3a3a3;
+    border-radius: 10px;                  
+    margin: 0 20px;                     
+    padding: 20px;                        
+    width: 100%;                          
+    height: 80%;                          
+    font-size: 20px;                      
+    border: 1px solid #858585;               
+    overflow-y: auto;
+    word-wrap: break-word; 
+
+}
+#markdown-result{
+    cursor: default;
+}
+
+#markdown-result:focus{
+    outline: none;
+}
+
+#markdown-result h1 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#markdown-result p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.icon-btn{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 70% 70%;
+    width: 40px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+}
+
+#accessSettingsBtn{
+    height: 40px;
+}
+#deleteDocumentBtn {
+    background-image: url('/Resources/bin.png');
+}
+
+#documentsBtn {
+    background-image: url('/Resources/documents.png');
+}
+
+#renameDocumentBtn{
+    background-image: url('/Resources/rename.png');
+}
+
+#saveDocumentBtn{
+    background-image: url('/Resources/save.png');
+}
+
+
+#send-bttn{
+    width: 100px;
+    height: 40px;
+}
+
+/*------------------   MODAL WINDOW   ------------------*/
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    z-index: 1001;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.modal h2 {
+    margin: 0;
+    font-size: 1.5em;
+    text-align: center;
+    color: #444;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.modal-select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+    background-color: #fff;
+    appearance: none;
+    -webkit-appearance: none; 
+    -moz-appearance: none; 
+    cursor: pointer;
+}
+
+.modal-save-button {
+    padding: 12px;
+    font-size: 1em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-save-button:hover {
+    background-color: #226a29;
+}
+
+.modal-close-button {
+    padding: 12px;
+    font-size: 1em;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-close-button:hover {
+    background-color: #c82333;
+}
+
+.modal-close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.2em;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s;
+    background: none;
+    border: none;
+}
+
+.modal-close-icon:hover {
+    background-color: transparent;
+    transform: scale(1.05);
+}
+
+.modal-close-icon:hover {
+    color: #dc3545;
+}
+
+.close-button:hover {
+    background-color: transparent;
+}
+/*------------------  PERMISSION MODAL WINDOW   ------------------*/
+
+.per-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.per-modal-content {
+    background-color: #ffffff;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.per-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+}
+
+.per-modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.per-close-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+}
+
+.per-close-modal:hover {
+    background-color: transparent;
+    color: #ea0000;
+}
+
+.per-modal-body {
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    color: #555;
+}
+
+.per-title-button-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap:6px;
+}
+
+.per-user-info {
+    display: flex;
+    flex-direction: row; 
+    gap: 16px; 
+    align-items: center;
+    justify-content: center;
+}
+
+.per-email {
+    font-size: 14px;
+    color: #555; 
+}
+
+.per-role {
+    font-size: 12px;
+    font-weight: bold;
+    color: #ffffff; 
+    background-color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 8px;
+    display: inline-block; 
+}
+
+.per-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #e6e6e6;
+    transition: background-color 0.3s;
+}
+
+
+.per-list-item span {
+    font-size: 18px;
+    color: #333;
+}
+
+
+.per-button-container {
+    display: flex;
+    gap: 0;
+}
+
+.per-add-button{
+    background-color: #b1b1b1;
+    border: 1px solid #ddd;
+    width: 30px;
+    height: 30px;
+    border-radius: 25%;
+    font-size: 20px;
+    color: #ffffff;
+    padding: 0;
+}
+
+.per-add-button:hover {
+    background-color: #b3b3b3;
+}
+
+
+.per-delete-button {
+    background-color: #ff4d4f;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    width: 30px;
+    height: 30px;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.per-change-button {
+    background-image: url('/Resources/change_role.png');
+    background-color: #3480bf;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 60% 60%;
+    width: 30px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: white;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+.per-delete-button:hover {
+    background-color: #d9363e;
+}
+
+.per-change-button:hover {
+    background-color: #2a6fa5;
+}
