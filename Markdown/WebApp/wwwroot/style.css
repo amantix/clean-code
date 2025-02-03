@@ -1,0 +1,329 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    color: #eee5e5;
+}
+
+body {
+    background-color: #2d2a4a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 10px;
+    background-color: #3c375e;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 40px;
+    z-index: 1000;
+}
+
+.container {
+    background-color: #2d2a4a;
+    display: flex;
+    gap: 20px;
+    width: 90%;
+    height: 80vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.field {
+    border: 2px solid #514b82;
+    border-radius: 5px;
+    background-color: #3c375e;
+    font-size: 16px;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    resize: none;
+    outline: none;
+}
+
+.field:focus {
+    border-color: #7769b7;
+}
+#messageField {
+    text-align: center;
+}
+
+#outputField {
+    overflow: auto;
+}
+
+.fieldButtons {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    height: 100%;
+}
+
+#openFullscreenButton {
+    margin-top: auto;
+}
+
+button {
+    padding: 10px;
+    margin: 3px 0;
+    border: 2px solid #514b82;
+    border-radius: 5px;
+    background-color: #3c375e;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #514b82;
+    border-color: #3c375e;
+}
+
+button:active {
+    background-color: #2a2645;
+}
+
+#inputContainer, #outputContainer {
+    flex: 3;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    height: 100%;
+    resize: none;
+    outline: none;
+}
+
+.fullscreenButton {
+    position: absolute;
+    bottom: 5px;
+    right: 7px;
+    background: rgba(255, 255, 255, 0.25);
+    border: 0;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 2px 5px;
+    font-size: 15px;
+}
+
+.fullscreenButton:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.fullscreen {
+    position: fixed !important;
+    top: 5vh;
+    left: 5vw;
+    width: 90vw !important;
+    height: 90vh !important;
+    margin: 0 !important;
+    z-index: 1000;
+    resize: none;
+}
+
+.authContainer {
+    position: absolute;
+    background-color: #4a4375;
+    text-align: center;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    display: none;
+}
+
+.authContainer input, .authContainer button {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+}
+
+.authContainer input {
+    color: black;
+}
+
+.authContainer input:focus {
+    border-color: #7c3aed;
+    outline: none;
+}
+
+.errorAuthMessage {
+    color: red;
+    font-size: 14px;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.tabButton {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.tabButton.active {
+    border-bottom: 2px solid #7c3aed;
+}
+
+.form {
+    display: none;
+}
+
+.form.active {
+    display: block;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.25);
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 2px 5px;
+}
+
+.close:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+#profilePopup {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    z-index: 1000;
+    background-color: #4a4375;
+    text-align: center;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.gridContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px;
+}
+
+.card {
+    position: relative;
+    flex: 1 1 250px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15);
+}
+
+.cardTitle {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.cardDates {
+    margin-top: 8px;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.deleteButton {
+    background-color: #514b82;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.deleteButton:hover {
+    background-color: #db2424;
+}
+
+#permissionForm {
+    display: none;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+#permissionForm {
+    background-color: #2d2a4a;
+    border: 2px solid #514b82;
+}
+
+#permissionForm div {
+    margin-bottom: 15px;
+}
+
+#permissionForm label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#permissionForm input,
+#permissionForm select {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #514b82;
+    border-radius: 4px;
+    background-color: #2d2a4a;
+    outline: none;
+}
+
+#permissionForm button {
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+}
+
+#shareDocumentSettingsContainer {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    background-color: #4a4375e4;
+    text-align: center;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+}

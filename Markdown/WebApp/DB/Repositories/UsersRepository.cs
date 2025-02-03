@@ -1,0 +1,47 @@
+﻿using Microsoft.EntityFrameworkCore;
+using WebApp.DB.Models;
+using WebApp.Interfaces;
+
+namespace WebApp.DB.Repositories;
+
+public class UsersRepository : IUsersRepository
+{
+    private readonly MyDbContext _dbContext;
+
+    public UsersRepository(MyDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<Result> AddAsync(User user)
+    {
+        var existingUser = await _dbContext.Users
+            .AnyAsync(u => u.Email == user.Email);
+
+        if (existingUser)
+        {
+            return Result.Failure("Пользователь с такой почтой уже зарегистрирован");
+        }
+
+
+        await _dbContext.Users.AddAsync(user);
+        await _dbContext.SaveChangesAsync();
+        return Result.Success();
+    }
+
+    public async Task<User> GetByEmailAsync(string email)
+    {
+        var user = await _dbContext.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Email == email);
+
+        return user;
+    }
+    public async Task<User> GetByIdAsync(Guid id)
+    {
+        var user = await _dbContext.Users
+            .FindAsync(id);
+
+        return user;
+    }
+}
