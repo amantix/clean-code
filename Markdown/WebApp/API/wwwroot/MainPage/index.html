@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Документы</title>
+    <link rel="stylesheet" href="./MainPage/styles.css">
+</head>
+<body>
+    <header>
+        <button id="register" onclick="showRegistrationForm()">Зарегистрироваться</button>
+        <button id="login" onclick="showLoginForm()">Войти</button>
+    </header>
+    <div class="container">
+        <div class="button-row">
+            <button id="new-document-button" onclick="showCreateDocumentForm()">Новый документ</button>
+            <button id="my-documents-btn" onclick="showPersonalDocuments()">Мои документы</button>
+            <button id="available-documents-btn" onclick="showAvailableDocuments()">Доступные документы</button>
+        </div>
+        <div class="scroll-row">
+            <div class="scroll-container" id="personal-documents">
+                <!-- Личные документы -->
+                <!-- Карточки документов будут добавляться динамически -->
+            </div>
+            <div class="scroll-container" id="available-documents">
+                <!-- Доступные документы -->
+                <!-- Карточки документов будут добавляться динамически -->
+            </div>
+        </div>
+    </div>
+    <script src="./MainPage/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+﻿services:
+  api:
+    image: api
+    build:
+      context: .
+      dockerfile: API/Dockerfile
+    ports:
+      - "5163:8080"
+    container_name: md_web_api
+    env_file:
+      - "webapp.env"
+    depends_on:
+      - db
+      - minio
+  
+  db:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5433:5432"
+    env_file:
+      - "webapp.env"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  
+  minio:
+    image: minio/minio
+    container_name: minio
+    env_file:
+      - "webapp.env"
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+volumes:
+  postgres_data:
+  minio_data:
