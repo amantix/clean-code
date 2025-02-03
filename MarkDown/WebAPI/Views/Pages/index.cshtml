@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MarkDown</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header>
+  <div class="navbar">
+      <div class="navbar-items">
+          <h1 class="title-site">
+              MarkDown
+          </h1>
+      </div>
+  </div>
+</header>
+<main>
+    <form id="markdownForm" class="container" style="padding: 20px">
+        <div style="margin-bottom: 20px">
+            <textarea id="markdownText" style="resize: none" name="markdownText" class="inputText"></textarea>
+            <textarea id="HtmlText" style="resize: none" name="htmlText" class="inputText" style="margin-left: 25px" readonly></textarea>
+            <input id="inputNameFile" class="input-style" style="width:250px" placeholder="Дайте название файлу"/>
+        </div>
+        <button type="submit" id="convertButton" class="btn" style="margin-left: 25px">Отправить</button>
+        <button type="button" id="saveButton" class="btn" style="margin-left: 25px">Сохранить</button>
+        <button type="button" id="deleteButton" class="btn" style="margin-left: 25px">Удалить</button>
+        <button type="button" id="showListButton" class="btn" style="margin-left: 25px">Показать список</button>
+        <ul style="width:250px; margin-top: 20px" id="listDocuments">
+        </ul>
+    </form>
+</main>
+</body>
+<script src="/js/scripts.js"></script>
+</html>
