@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown to HTML Converter</title>
+    <!-- Подключаем Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        /* Стили для шапки */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        /* Стили для логотипа */
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo h1 {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+            position: relative;
+        }
+        .logo h1::before {
+            content: "{}";
+            color: #007BFF;
+            font-size: 42px;
+            position: absolute;
+            left: -25px;
+            top: -8px;
+            opacity: 0.3;
+        }
+        .logo h1::after {
+            content: "{}";
+            color: #007BFF;
+            font-size: 42px;
+            position: absolute;
+            right: -25px;
+            top: -8px;
+            opacity: 0.3;
+        }
+        .logo p {
+            font-size: 16px;
+            color: #666;
+            margin: 5px 0 0;
+        }
+        /* Стили для имени пользователя */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-info input {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+        .user-info input::placeholder {
+            color: #999;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .input-group {
+            width: 48%;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            font-family: monospace;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .copy-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: #007BFF;
+            transition: color 0.3s ease;
+        }
+        .copy-button:hover {
+            color: #0056b3;
+        }
+        /* Стили для ссылки логотипа */
+        .logo a {
+            text-decoration: none; /* Убираем подчеркивание */
+            color: inherit; /* Наследуем цвет текста */
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <div class="header">
+        <!-- Логотип -->
+        <div class="logo">
+            <a href="https://example.com" target="_blank"> <!-- Добавляем ссылку -->
+                <h1>Markdown</h1>
+            </a>
+        </div>
+        <!-- Имя пользователя -->
+        <div class="user-info">
+            <input type="text" id="inputNameFile" placeholder="Файл">
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container">
+        <!-- Markdown input -->
+        <div class="input-group">
+            <button class="copy-button" onclick="copyMarkdown()" title="Copy Markdown">
+                <i class="fas fa-copy"></i>
+            </button>
+            <textarea name="mdText" id="markdownForm" placeholder="Введите Markdown текст..."></textarea>
+        </div>
+        <!-- HTML output -->
+        <div class="input-group">
+            <button class="copy-button" onclick="copyHTML()" title="Copy HTML">
+                <i class="fas fa-copy"></i>
+            </button>
+            <textarea id="htmlForm" name="htmlForm" placeholder="Здесь будет HTML текст..." readonly></textarea>
+        </div>
+    </div>
+    <div class="buttons">
+        <button id="convertButton" type="submit">Convert</button>
+        <button id="saveButton", type="submit">Save Document</button>
+    </div>
+
+    <script>
+
+        function copyMarkdown() {
+            const markdownText = document.getElementById('markdown');
+            markdownText.select();
+            document.execCommand('copy');
+            alert('Markdown скопирован!');
+        }
+
+        function copyHTML() {
+            const htmlText = document.getElementById('html');
+            htmlText.select();
+            document.execCommand('copy');
+            alert('HTML скопирован!');
+        }
+        
+    </script>
+    <script src="js/indexScript.js"></script>
+</body>
+</html>

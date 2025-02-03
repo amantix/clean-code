@@ -1,0 +1,6 @@
+﻿services:
+  webappmarkdown:
+    image: webappmarkdown
+    build:
+      context: .
+      dockerfile: WebAppMarkdown/Dockerfile

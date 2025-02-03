@@ -1,0 +1,118 @@
+﻿@page
+@using Microsoft.AspNetCore.Authorization;
+@inject IAuthorizationService AuthorizationService
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Converter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            color: #007BFF;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo::before {
+            content: "{}";
+            color: #007BFF;
+            opacity: 0.3;
+            margin-right: 10px;
+        }
+        .logo::after {
+            content: "{}";
+            color: #007BFF;
+            opacity: 0.3;
+            margin-left: 10px;
+        }
+        /* Стиль для кнопок "Войти" и "Зарегистрироваться" */
+        .btn-custom {
+            width: 200px;
+            height: 50px;
+            margin: 10px;
+            padding: 10px;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+        }
+
+        /* Контейнер для кнопок "Войти" и "Зарегистрироваться", расположенных на одной линии */
+        .top-right-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;  /* Используем flexbox */
+            gap: 10px;     /* Добавляем расстояние между кнопками */
+        }
+
+        /* Стиль для квадратных кнопок с текстом и иконками */
+        .btn-square {
+            width: 160px;  /* Увеличиваем ширину кнопок */
+            height: 160px; /* Увеличиваем высоту кнопок */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;  /* Разместим иконку и текст по вертикали */
+            text-align: center;
+            font-size: 20px;
+            padding: 0;
+            margin: 10px;
+        }
+        .btn-square i {
+            font-size: 40px;  /* Увеличиваем размер иконки */
+        }
+        .btn-square .btn-text {
+            font-size: 14px;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="text-center">
+    <div class="logo">
+        Markdown
+    </div>
+    <div class="d-flex flex-column align-items-center">
+        <!-- Кнопка "Создать" с плюсом -->
+        <a href="/create" class="btn btn-primary btn-square">
+            <i class="bi bi-plus-circle"></i>
+            <span class="btn-text">Создать</span>
+        </a>
+        <!-- Кнопка "Открыть" с папкой -->
+        <a href="/open" class="btn btn-success btn-square">
+            <i class="bi bi-folder"></i>
+            <span class="btn-text">Открыть</span>
+        </a>
+    </div>
+    <!-- Кнопки "Войти" и "Зарегистрироваться" на одной линии -->
+    <div class="top-right-buttons">
+        @if (!User.Identity.IsAuthenticated)
+        {
+        <a href="/login" class="btn btn-warning btn-custom">Войти</a>
+        <a href="/register" class="btn btn-info btn-custom">Зарегистрироваться</a>
+        }
+        else
+        {
+        <a href="/logout" class="btn btn-danger btn-custom">Выйти</a>
+        }
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
