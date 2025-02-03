@@ -1,0 +1,9 @@
+Markdown/.vs/Markdown/FileContentIndex/ 
+bin/
+obj/
+Properties/
+*.csproj.user
+**/bin
+**/obj
+**/.vs
+/Markdown/MarkdownFront/.idea

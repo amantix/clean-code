@@ -1,0 +1,59 @@
+label {
+  display: block;
+  margin-top: 10px;
+}
+
+.card-container.card {
+  max-width: 350px !important;
+  padding: 40px 40px;
+}
+
+.card {
+  padding: 20px 25px 30px;
+  margin: 0 auto 5px;
+  margin-top: 10px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+
+.profile-img-card {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 10px;
+  display: block;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+
+}
+
+.nav-link {
+  color: aliceblue;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.navbar .navbar-brand {
+  color: azure;
+  padding: 14px;
+}
+
+.cards {
+  position: relative;
+  padding: 1rem;
+  margin: 1rem -15px 0;
+  border: solid #f7f7f9;
+  border-width: 0.2rem 0 0;
+}
+
+.card-columns {
+  @include media-breakpoint-only(lg) {
+    column-count: 4;
+  }
+  @include media-breakpoint-only(xl) {
+    column-count: 5;
+  }
+}
