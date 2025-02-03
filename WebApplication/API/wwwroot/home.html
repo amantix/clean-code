@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Management</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+<div class="container">
+    <h1>Document Management</h1>
+    <button id="createDocumentBtn">Create Document</button>
+    <ul id="documentList"></ul>
+</div>
+
+<!-- Модальное окно для создания/редактирования документа -->
+<div id="documentModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">Create Document</h2>
+        <form id="documentForm">
+            <input type="text" id="documentName" placeholder="Document Name" required>
+            <select id="documentAccess" required>
+                <option value="2">Public (Read Only)</option>
+                <option value="3">Public (Editable)</option>
+                <option value="1">Private</option>
+            </select>
+            <button type="submit" id="submitDocumentBtn">Create</button>
+        </form>
+    </div>
+</div>
+<div id="permissions" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">Список записей</h2>
+        <ul id ="modal-list-id" class="modal-list">
+
+        </ul>
+    </div>
+</div>
+
+<div id="userModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="addUserTitle">Add User</h2>
+        <form >
+            <input type="email" id="userEmail" placeholder="User Email" required>
+            <select id="userAccess" required>
+                <option value="1">Read</option>
+                <option value="2">Edit</option>
+            </select>
+            <button id="submitUserBtn">Add</button>
+        </form>
+    </div>
+</div>
+
+<script src="home.js"></script>
+</body>
+</html>

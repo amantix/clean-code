@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="navbar">
+    <button id="signupBtn" class="nav-button">Зарегистрироваться</button>
+    <button id="loginBtn" class="nav-button">Войти</button>
+</div>
+
+<div class="welcome">
+    <h1>Добро пожаловать!</h1>
+</div>
+
+<!-- Модальное окно для регистрации -->
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Регистрация</h2>
+        <form >
+            <input type="text" id="name" placeholder="Имя" required>
+            <input type="email" id="emailSignup" placeholder="Почта" required>
+            <input type="password" id="passwordSignup" placeholder="Пароль" required>
+            <button id="signupForm" class="form-button">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
+
+<!-- Модальное окно для входа -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Вход</h2>
+        <form >
+            <input type="email" id="emailLogin" placeholder="Почта" required>
+            <input type="password" id="passwordLogin" placeholder="Пароль" required>
+            <button id="loginForm" class="form-button">Войти</button>
+        </form>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
