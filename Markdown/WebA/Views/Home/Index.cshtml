@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+    <div class="col-md-5">
+        <textarea id="markdownText" class="form-control" rows="10" placeholder="Enter text md"></textarea>
+    </div>
+    <div class="col-md-2 d-flex align-items-center justify-content-center">
+        <button id="translateButton" class="btn btn-primary">Translate</button>
+    </div>
+    <div class="col-md-5 position-relative">
+        <textarea id="htmlText" class="form-control" rows="10" placeholder="Html code"></textarea>
+        <div class="text-right mt-2">
+            <input type="text" id="fileName" class="form-control mb-2" placeholder="Enter file name" />
+            <button id="saveButton" class="btn btn-secondary" style="width: 50px; height: 50px;">
+                <img src="https://www.freeiconspng.com/uploads/white-download-icon-png-32.png" alt="Save" style="width: 24px; height: 24px;">
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('translateButton').addEventListener('click', function () {
+            var markdownText = document.getElementById('markdownText').value;
+
+            fetch('/Markdown/Translate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ markdownText: markdownText })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.error || 'An error occurred.');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('htmlText').value = data.html;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error);
+            });
+        });
+
+        document.getElementById('saveButton').addEventListener('click', function () {
+            var fileName = document.getElementById('fileName').value;
+            var markdownText = document.getElementById('markdownText').value;
+
+            if (!fileName) {
+                alert("Please enter a file name.");
+                return;
+            }
+
+            fetch('/Documents/SaveFile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ fileName: fileName, content: markdownText })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message || "File saved successfully!");
+                } else {
+                    alert(data.message || "Failed to save file.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error);
+            });
+        });
+    </script>
+}
