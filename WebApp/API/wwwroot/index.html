@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Документы</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header>
+    <nav>
+        <!-- Добавил контейнер для кнопок авторизации -->
+        <div class="auth-buttons">
+            <button id="register" onclick="showRegistrationForm()">Зарегистрироваться</button>
+            <button id="login" onclick="showLoginForm()">Войти</button>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="container">
+        <!-- Добавил секцию для управления документами -->
+        <section class="document-controls">
+            <div class="button-row">
+                <button id="new-document-button" onclick="showCreateDocumentForm()">Новый документ</button>
+                <button id="my-documents-btn" onclick="showPersonalDocuments()">Мои документы</button>
+                <button id="available-documents-btn" onclick="showAvailableDocuments()">Доступные документы</button>
+            </div>
+        </section>
+
+        <!-- Добавил секцию для отображения документов -->
+        <section class="document-list">
+            <div class="scroll-row">
+                <div class="scroll-container" id="personal-documents">
+                    <h2>Мои документы</h2>
+                    <!-- Карточки документов будут добавляться динамически -->
+                </div>
+                <div class="scroll-container" id="available-documents">
+                    <h2>Доступные документы</h2>
+                    <!-- Карточки документов будут добавляться динамически -->
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- Добавил футер для дополнительной информации -->
+<footer>
+    <p>&copy; 2023 Документы. Все права защищены.</p>
+</footer>
+
+<script src="/script.js"></script>
+</body>
+</html>
