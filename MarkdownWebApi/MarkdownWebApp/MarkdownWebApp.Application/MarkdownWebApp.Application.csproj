@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>MarkdownWebApi.Application</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+      <PackageReference Include="Minio" Version="6.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\MarkdownProcessorLib\MarkdownProcessorLib\MarkdownProcessorLib.csproj" />
+      <ProjectReference Include="..\MarkdownWebApp.Core\MarkdownWebApp.Core.csproj" />
+    </ItemGroup>
+
+</Project>
